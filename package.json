@@ -1,0 +1,16 @@
+{
+  "name": "alert-notification-system",
+  "version": "1.0.0",
+  "description": "Aircall interview",
+  "author": "Carlos Juega <carlosjuegasi@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "src/contexts/*",
+    "src/apps/*/*"
+  ],
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=7.20.0"
+  }
+}
