@@ -12,5 +12,21 @@
   "engines": {
     "node": ">=14.0.0",
     "npm": ">=7.20.0"
+  },
+  "scripts": {
+    "postinstall": "npx husky install",
+    "precommit": "npx lerna run precommit --stream --concurrency 1",
+    "lint": "yarn lint:contexts && yarn lint:apps",
+    "lint:contexts": "npx lerna run lint --scope @ans/ctx-* --stream",
+    "lint:apps": "npx lerna run lint --scope @ans/app-* --stream",
+    "build": "npx lerna run build --scope @ans/ctx-*",
+    "test": "yarn build && yarn test:unit && yarn test:integration && yarn test:features",
+    "test:unit": "npx lerna run test:unit --scope @ans/ctx-* --stream",
+    "test:integration": "npx lerna run test:integration --scope @ans/ctx-* --stream --concurrency 1",
+    "test:features": "npx lerna run test --scope @ans/app-* --stream --concurrency 1"
+  },
+  "devDependencies": {
+    "husky": "^7.0.4",
+    "lerna": "^4.0.0"
   }
 }
