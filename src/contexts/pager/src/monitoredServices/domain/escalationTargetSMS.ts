@@ -15,6 +15,10 @@ export default class EscalationTargetSMS extends EscalationTarget {
         this.phoneNumber = new PhoneNumber(phoneNumber);
     }
 
+    clone(): EscalationTargetSMS {
+        return new EscalationTargetSMS(this.phoneNumber.value);
+    }
+
     equalsTo(other: EscalationTargetSMS): boolean {
         if (!(other instanceof EscalationTargetSMS)) {
             return false;

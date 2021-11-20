@@ -7,4 +7,12 @@ export default class MonitoredServiceStatusMother {
 
         return Object.values(MonitoredServiceStatus)[index];
     }
+
+    static toggle(status: MonitoredServiceStatus): MonitoredServiceStatus {
+        if (status === MonitoredServiceStatus.Healthy) {
+            return MonitoredServiceStatus.Unhealthy;
+        }
+
+        return MonitoredServiceStatus.Healthy;
+    }
 }

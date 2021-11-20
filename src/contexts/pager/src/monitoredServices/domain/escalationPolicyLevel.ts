@@ -16,6 +16,12 @@ export default class EscalationPolicyLevel {
         this.targets = targets;
     }
 
+    static clone(level: EscalationPolicyLevel): EscalationPolicyLevel {
+        const targets = level.targets.map((t) => t.clone());
+
+        return new EscalationPolicyLevel(targets);
+    }
+
     private static isValidLevel(targets: EscalationTarget[]): void {
         const isValid = targets.length > 0;
 

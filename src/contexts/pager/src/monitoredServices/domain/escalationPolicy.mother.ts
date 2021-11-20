@@ -15,4 +15,8 @@ export default class EscalationPolicyMother {
 
         return EscalationPolicyMother.create(levels);
     }
+
+    static clone(policy: EscalationPolicy): EscalationPolicy {
+        return EscalationPolicyMother.create(policy.levels);
+    }
 }

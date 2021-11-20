@@ -25,6 +25,10 @@ export default class MonitoredServiceRepositoryMock implements MonitoredServiceR
         expect(lastSavedMonitoredServiveBody).toStrictEqual(expectedBody);
     }
 
+    assertNothingSaved(): void {
+        expect(this.mockSave).not.toHaveBeenCalled();
+    }
+
     async search(id: MonitoredServiceId): Promise<Nullable<MonitoredService>> {
         return this.mockSearch(id);
     }

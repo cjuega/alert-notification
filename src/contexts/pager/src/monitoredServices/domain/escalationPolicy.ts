@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import InvalidArgumentError from '@ans/ctx-shared/domain/invalidArgumentError';
 import EscalationPolicyLevel, { EscalationPolicyLevelPrimitives } from '@src/monitoredServices/domain/escalationPolicyLevel';
 
@@ -6,12 +7,16 @@ export type EscalationPolicyPrimitives = {
 };
 
 export default class EscalationPolicy {
-    private readonly levels: EscalationPolicyLevel[];
+    private readonly _levels: EscalationPolicyLevel[];
+
+    get levels(): EscalationPolicyLevel[] {
+        return this._levels.map((l) => EscalationPolicyLevel.clone(l));
+    }
 
     constructor(levels: EscalationPolicyLevel[]) {
         EscalationPolicy.isValidPolicy(levels);
 
-        this.levels = levels;
+        this._levels = levels;
     }
 
     private static isValidPolicy(levels: EscalationPolicyLevel[]): void {
@@ -23,6 +28,6 @@ export default class EscalationPolicy {
     }
 
     toPrimitives(): EscalationPolicyPrimitives {
-        return { levels: this.levels.map((l) => l.toPrimitives()) };
+        return { levels: this._levels.map((l) => l.toPrimitives()) };
     }
 }

@@ -15,6 +15,10 @@ export default class EscalationTargetEmail extends EscalationTarget {
         this.email = new Email(email);
     }
 
+    clone(): EscalationTargetEmail {
+        return new EscalationTargetEmail(this.email.value);
+    }
+
     equalsTo(other: EscalationTargetEmail): boolean {
         if (!(other instanceof EscalationTargetEmail)) {
             return false;

@@ -28,4 +28,17 @@ export default class MonitoredServiceMother {
     static randomList(nItems?: number, overwrites?: { status?: MonitoredServiceStatus }): MonitoredService[] {
         return Repeater.random(() => MonitoredServiceMother.random(overwrites), nItems);
     }
+
+    static clone(service: MonitoredService, overwrites?: { status?: MonitoredServiceStatus }): MonitoredService {
+        const id = MonitoredServiceIdMother.create(service.id.value),
+            name = MonitoredServiceNameMother.create(service.name.value),
+            status = overwrites?.status ? overwrites.status : service.status,
+            escalationPolicy = EscalationPolicyMother.clone(service.escalationPolicy);
+
+        return MonitoredServiceMother.create(id.value, name.value, status, escalationPolicy);
+    }
+
+    static toggleStatus(service: MonitoredService): MonitoredService {
+        return MonitoredServiceMother.clone(service, { status: MonitoredServiceStatusMother.toggle(service.status) });
+    }
 }
