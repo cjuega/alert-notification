@@ -2,14 +2,9 @@ import AggregateRoot from '@ans/ctx-shared/domain/aggregateRoot';
 import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
 import MonitoredServiceName from '@src/monitoredServices/domain/monitoredServiceName';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
-import EscalationPolicy, { EscalationPolicyPrimitives } from '@src/monitoredServices/domain/escalationPolicy';
-
-type MonitoredServicePrimitives = {
-    id: string;
-    name: string;
-    status: MonitoredServiceStatus;
-    escalationPolicy: EscalationPolicyPrimitives;
-};
+import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
+import MonitoredServiceCreatedDomainEvent from '@src/monitoredServices/domain/monitoredServiceCreatedDomainEvent';
+import { MonitoredServicePrimitives } from '@src/monitoredServices/domain/monitoredServicePrimitives';
 
 export default class MonitoredService extends AggregateRoot {
     readonly id: MonitoredServiceId;
@@ -31,6 +26,8 @@ export default class MonitoredService extends AggregateRoot {
 
     static create(id: string, name: string, escalationPolicy: EscalationPolicy): MonitoredService {
         const service = new MonitoredService(id, name, MonitoredServiceStatus.Healthy, escalationPolicy);
+
+        service.record(new MonitoredServiceCreatedDomainEvent(service.toPrimitives()));
 
         return service;
     }
