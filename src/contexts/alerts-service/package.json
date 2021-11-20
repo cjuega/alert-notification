@@ -1,7 +1,7 @@
 {
-  "name": "@ans/ctx-alerts",
+  "name": "@ans/ctx-pager",
   "version": "1.0.0",
-  "description": "Bounded context for alerts service",
+  "description": "Bounded context for pager service",
   "author": "Carlos Juega",
   "license": "MIT",
   "scripts": {
@@ -33,6 +33,7 @@
     "typescript-eslint": "^0.0.1-alpha.0"
   },
   "dependencies": {
-    "@ans/ctx-shared": "^1.0.0"
+    "@ans/ctx-shared": "^1.0.0",
+    "libphonenumber-js": "^1.9.43"
   }
 }

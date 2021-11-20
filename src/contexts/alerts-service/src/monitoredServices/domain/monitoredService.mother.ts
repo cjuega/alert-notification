@@ -3,18 +3,21 @@ import MonitoredServiceIdMother from '@src/monitoredServices/domain/monitoredSer
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 import MonitoredServiceStatusMother from '@src/monitoredServices/domain/monitoredServiceStatus.mother';
+import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
+import EscalationPolicyMother from '@src/monitoredServices/domain/escalationPolicy.mother';
 
 export default class MonitoredServiceMother {
-    static create(id: string, name: string, status: MonitoredServiceStatus): MonitoredService {
-        return new MonitoredService(id, name, status);
+    static create(id: string, name: string, status: MonitoredServiceStatus, escalationPolicy: EscalationPolicy): MonitoredService {
+        return new MonitoredService(id, name, status, escalationPolicy);
     }
 
     static random(overwrites?: { status?: MonitoredServiceStatus }): MonitoredService {
         const id = MonitoredServiceIdMother.random().value,
             name = MonitoredServiceNameMother.random().value,
-            status = overwrites?.status ? overwrites.status : MonitoredServiceStatusMother.random();
+            status = overwrites?.status ? overwrites.status : MonitoredServiceStatusMother.random(),
+            escalationPolicy = EscalationPolicyMother.random();
 
-        return MonitoredServiceMother.create(id, name, status);
+        return MonitoredServiceMother.create(id, name, status, escalationPolicy);
     }
 
     static invalid(): { id: string; name: string } {

@@ -5,6 +5,7 @@ import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServi
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
 import InvalidArgumentError from '@ans/ctx-shared/domain/invalidArgumentError';
 import MonitoredServiceAlreadyExists from '@src/monitoredServices/domain/monitoredServiceAlreadyExists';
+import EscalationPolicyMother from '@src/monitoredServices/domain/escalationPolicy.mother';
 
 describe('monitoredServiceRegistor', () => {
     it('should create a valid MonitoredService', async () => {
@@ -16,7 +17,7 @@ describe('monitoredServiceRegistor', () => {
 
         repository.whenSearchThenReturn(null);
 
-        await useCase.run(expected.id.value, expected.name.value);
+        await useCase.run(expected.id.value, expected.name.value, expected.escalationPolicy);
 
         repository.assertSaveHasBeenCalledWith(expected);
     });
@@ -33,7 +34,7 @@ describe('monitoredServiceRegistor', () => {
         let error;
 
         try {
-            await useCase.run(id, name);
+            await useCase.run(id, name, EscalationPolicyMother.random());
         } catch (e) {
             error = e;
         } finally {
@@ -53,7 +54,7 @@ describe('monitoredServiceRegistor', () => {
         let error;
 
         try {
-            await useCase.run(monitoredService.id.value, MonitoredServiceNameMother.random().value);
+            await useCase.run(monitoredService.id.value, MonitoredServiceNameMother.random().value, EscalationPolicyMother.random());
         } catch (e) {
             error = e;
         } finally {
