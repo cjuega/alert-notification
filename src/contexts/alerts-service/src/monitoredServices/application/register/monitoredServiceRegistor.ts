@@ -10,10 +10,10 @@ export default class MonitoredServiceRegistor {
         this.repository = repository;
     }
 
-    async run(serviceId: string): Promise<void> {
+    async run(serviceId: string, serviceName: string): Promise<void> {
         await this.ensureMonitoredServiceDoesntExist(serviceId);
 
-        const service = MonitoredService.create(serviceId);
+        const service = MonitoredService.create(serviceId, serviceName);
 
         await this.repository.save(service);
     }
