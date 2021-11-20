@@ -5,6 +5,7 @@ import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServi
 import MonitoredServiceStatusMother from '@src/monitoredServices/domain/monitoredServiceStatus.mother';
 import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
 import EscalationPolicyMother from '@src/monitoredServices/domain/escalationPolicy.mother';
+import Repeater from '@ans/ctx-shared/domain/repeater.mother';
 
 export default class MonitoredServiceMother {
     static create(id: string, name: string, status: MonitoredServiceStatus, escalationPolicy: EscalationPolicy): MonitoredService {
@@ -22,5 +23,9 @@ export default class MonitoredServiceMother {
 
     static invalid(): { id: string; name: string } {
         return { id: 'invalid value', name: "there aren't validations for name" };
+    }
+
+    static randomList(nItems?: number, overwrites?: { status?: MonitoredServiceStatus }): MonitoredService[] {
+        return Repeater.random(() => MonitoredServiceMother.random(overwrites), nItems);
     }
 }
