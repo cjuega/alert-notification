@@ -16,4 +16,8 @@ export default class MonitoredServiceMother {
 
         return MonitoredServiceMother.create(id, name, status);
     }
+
+    static invalid(): { id: string; name: string } {
+        return { id: 'invalid value', name: "there aren't validations for name" };
+    }
 }
