@@ -1,4 +1,4 @@
-import EmailMother from '@src/shared/domain/email.mother';
+import EmailAddressMother from '@src/shared/domain/emailAddress.mother';
 import EscalationTargetEmail from '@src/shared/domain/escalationPolicies/escalationTargetEmail';
 
 export default class EscalationTargetEmailMother {
@@ -7,7 +7,7 @@ export default class EscalationTargetEmailMother {
     }
 
     static random(): EscalationTargetEmail {
-        const email = EmailMother.random().value;
+        const email = EmailAddressMother.random().value;
 
         return EscalationTargetEmailMother.create(email);
     }

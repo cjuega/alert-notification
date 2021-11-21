@@ -3,7 +3,7 @@ import UpdateMonitoredServiceCommand, { CommandParams } from '@src/monitoredServ
 import MonitoredService from '@src/monitoredServices/domain/monitoredService';
 import MonitoredServiceMother from '@src/monitoredServices/domain/monitoredService.mother';
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
-import EmailMother from '@src/shared/domain/email.mother';
+import EmailAddressMother from '@src/shared/domain/emailAddress.mother';
 import EscalationPolicy from '@src/shared/domain/escalationPolicies/escalationPolicy';
 import EscalationPolicyLevel from '@src/shared/domain/escalationPolicies/escalationPolicyLevel';
 import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
@@ -32,7 +32,7 @@ export default class UpdateMonitoredServiceCommandMother {
         for (let i = 0; i < levels; i += 1) {
             const nEmails = MotherCreator.zeroOrPositiveNumber(2),
                 hasEmails = nEmails > 0,
-                emails = EmailMother.randomList(nEmails).map((e) => e.value),
+                emails = EmailAddressMother.randomList(nEmails).map((e) => e.value),
                 nPhones = hasEmails ? MotherCreator.zeroOrPositiveNumber(2) : MotherCreator.positiveNumber(2),
                 phoneNumbers = PhoneNumberMother.randomList(nPhones).map((p) => p.value);
 

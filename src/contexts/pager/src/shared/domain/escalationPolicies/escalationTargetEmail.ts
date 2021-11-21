@@ -1,6 +1,6 @@
 import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
 import EscalationTargetType from '@src/shared/domain/escalationPolicies/escalationTargetType';
-import Email from '@src/shared/domain/email';
+import EmailAddress from '@src/shared/domain/emailAddress';
 
 export type EscalationTargetEmailPrimitives = {
     type: EscalationTargetType;
@@ -8,12 +8,12 @@ export type EscalationTargetEmailPrimitives = {
 };
 
 export default class EscalationTargetEmail extends EscalationTarget {
-    readonly email: Email;
+    readonly email: EmailAddress;
 
     constructor(email: string) {
         super();
 
-        this.email = new Email(email);
+        this.email = new EmailAddress(email);
     }
 
     clone(): EscalationTargetEmail {
