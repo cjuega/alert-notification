@@ -16,4 +16,8 @@ export default class Datetime extends StringValueObject {
             throw new InvalidArgumentError(`<${this.name}> doesn't allow the value <${value}>`);
         }
     }
+
+    static clone(datetime: Datetime): Datetime {
+        return new Datetime(datetime.value);
+    }
 }

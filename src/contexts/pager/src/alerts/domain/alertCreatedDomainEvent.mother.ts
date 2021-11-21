@@ -13,13 +13,13 @@ export default class AlertCreatedDomainEventMother {
         return new AlertCreatedDomainEvent(params);
     }
 
-    static fromAlert(service: Alert): AlertCreatedDomainEvent {
-        return AlertCreatedDomainEventMother.create(service.toPrimitives());
+    static fromAlert(alert: Alert): AlertCreatedDomainEvent {
+        return AlertCreatedDomainEventMother.create(alert.toPrimitives());
     }
 
     static random(): AlertCreatedDomainEvent {
-        const service = AlertMother.random();
+        const alert = AlertMother.random();
 
-        return AlertCreatedDomainEventMother.fromAlert(service);
+        return AlertCreatedDomainEventMother.fromAlert(alert);
     }
 }

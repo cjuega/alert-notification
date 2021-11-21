@@ -43,4 +43,19 @@ export default class AlertMother {
     static resolvedAlert(): Alert {
         return AlertMother.random({ status: AlertStatus.Resolved, resolvedAt: DatetimeMother.random() });
     }
+
+    static clone(alert: Alert, overwrites?: { resolvedAt?: Datetime }): Alert {
+        const { id } = alert,
+            { serviceId } = alert,
+            { message } = alert,
+            { status } = alert,
+            { createdAt } = alert,
+            resolvedAt = overwrites?.resolvedAt ? overwrites.resolvedAt : alert.resolvedAt;
+
+        return AlertMother.create(id, serviceId, message, status, createdAt, resolvedAt);
+    }
+
+    static resolve(alert: Alert, resolvedAt: Datetime): Alert {
+        return AlertMother.clone(alert, { resolvedAt });
+    }
 }
