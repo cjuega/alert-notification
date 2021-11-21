@@ -1,8 +1,8 @@
 import MotherCreator from '@ans/ctx-shared/domain/motherCreator.mother';
 import Repeater from '@ans/ctx-shared/domain/repeater.mother';
-import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
-import EscalationPolicyLevel from '@src/monitoredServices/domain/escalationPolicyLevel';
-import EscalationPolicyLevelMother from '@src/monitoredServices/domain/escalationPolicyLevel.mother';
+import EscalationPolicy, { EscalationPolicyPrimitives } from '@src/shared/domain/escalationPolicies/escalationPolicy';
+import EscalationPolicyLevel from '@src/shared/domain/escalationPolicies/escalationPolicyLevel';
+import EscalationPolicyLevelMother from '@src/shared/domain/escalationPolicies/escalationPolicyLevel.mother';
 
 export default class EscalationPolicyMother {
     static create(levels: EscalationPolicyLevel[]): EscalationPolicy {
@@ -18,5 +18,9 @@ export default class EscalationPolicyMother {
 
     static clone(policy: EscalationPolicy): EscalationPolicy {
         return EscalationPolicyMother.create(policy.levels);
+    }
+
+    static fromPrimitives(primitives: EscalationPolicyPrimitives): EscalationPolicy {
+        return EscalationPolicy.fromPrimitives(primitives);
     }
 }

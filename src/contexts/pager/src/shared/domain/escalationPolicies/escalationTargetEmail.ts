@@ -1,8 +1,9 @@
-import EscalationTarget from '@src/monitoredServices/domain/escalationTarget';
-import EscalationTargetType from '@src/monitoredServices/domain/escalationTargetType';
-import Email from '@src/monitoredServices/domain/email';
+import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
+import EscalationTargetType from '@src/shared/domain/escalationPolicies/escalationTargetType';
+import Email from '@src/shared/domain/email';
 
 export type EscalationTargetEmailPrimitives = {
+    type: EscalationTargetType;
     email: string;
 };
 
@@ -36,6 +37,6 @@ export default class EscalationTargetEmail extends EscalationTarget {
     }
 
     toPrimitives(): EscalationTargetEmailPrimitives {
-        return { email: this.email.value };
+        return { type: EscalationTargetEmail.type(), email: this.email.value };
     }
 }

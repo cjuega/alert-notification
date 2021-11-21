@@ -1,5 +1,5 @@
-import EmailMother from '@src/monitoredServices/domain/email.mother';
-import EscalationTargetEmail from '@src/monitoredServices/domain/escalationTargetEmail';
+import EmailMother from '@src/shared/domain/email.mother';
+import EscalationTargetEmail from '@src/shared/domain/escalationPolicies/escalationTargetEmail';
 
 export default class EscalationTargetEmailMother {
     static create(email: string): EscalationTargetEmail {

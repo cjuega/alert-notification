@@ -5,7 +5,7 @@ import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.moth
 import MonitoredServiceNotFound from '@src/monitoredServices/domain/monitoredServiceNotFound';
 import MonitoredServiceUpdater from '@src/monitoredServices/application/update/monitoredServiceUpdater';
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
-import EscalationPolicyMother from '@src/monitoredServices/domain/escalationPolicy.mother';
+import EscalationPolicyMother from '@src/shared/domain/escalationPolicies/escalationPolicy.mother';
 import MonitoredServiceMother from '@src/monitoredServices/domain/monitoredService.mother';
 import MonitoredServiceUpdatedDomainEventMother from '@src/monitoredServices/domain/monitoredServiceUpdatedDomainEvent.mother';
 

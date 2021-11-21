@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import InvalidArgumentError from '@ans/ctx-shared/domain/invalidArgumentError';
-import EscalationPolicyLevel, { EscalationPolicyLevelPrimitives } from '@src/monitoredServices/domain/escalationPolicyLevel';
+import EscalationPolicyLevel, { EscalationPolicyLevelPrimitives } from '@src/shared/domain/escalationPolicies/escalationPolicyLevel';
 
 export type EscalationPolicyPrimitives = {
     levels: EscalationPolicyLevelPrimitives[];
@@ -29,6 +29,10 @@ export default class EscalationPolicy {
         if (!isValid) {
             throw new InvalidArgumentError('EscalationPolicy must have at least one level');
         }
+    }
+
+    static fromPrimitives(primitives: EscalationPolicyPrimitives): EscalationPolicy {
+        return new EscalationPolicy(primitives.levels.map((l) => EscalationPolicyLevel.fromPrimitives(l)));
     }
 
     toPrimitives(): EscalationPolicyPrimitives {

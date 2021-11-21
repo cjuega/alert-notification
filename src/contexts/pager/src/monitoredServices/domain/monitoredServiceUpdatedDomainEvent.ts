@@ -1,6 +1,6 @@
 import { DomainEvent } from '@ans/ctx-shared/domain/bus/event/domainEvent';
 import { MonitoredServicePrimitives } from '@src/monitoredServices/domain/monitoredServicePrimitives';
-import { EscalationPolicyPrimitives } from '@src/monitoredServices/domain/escalationPolicy';
+import { EscalationPolicyPrimitives } from '@src/shared/domain/escalationPolicies/escalationPolicy';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 
 type UpdateMonitoredServiceDomainEventBody = Readonly<Omit<MonitoredServicePrimitives, 'id'>>;

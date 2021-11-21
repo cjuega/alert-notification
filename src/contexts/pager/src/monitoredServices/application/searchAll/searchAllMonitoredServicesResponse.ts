@@ -9,6 +9,7 @@ export default class SearchAllMonitoredServicesResponse implements Response {
 
     constructor(services: MonitoredService[]) {
         this.items = services.map((service) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { escalationPolicy, ...others } = service.toPrimitives();
 
             return { ...others };

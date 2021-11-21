@@ -1,5 +1,5 @@
-import EscalationTargetSMS from '@src/monitoredServices/domain/escalationTargetSMS';
-import PhoneNumberMother from '@src/monitoredServices/domain/phoneNumber.mother';
+import EscalationTargetSMS from '@src/shared/domain/escalationPolicies/escalationTargetSMS';
+import PhoneNumberMother from '@src/shared/domain/phoneNumber.mother';
 
 export default class EscalationTargetSMSMother {
     static create(phoneNumber: string): EscalationTargetSMS {

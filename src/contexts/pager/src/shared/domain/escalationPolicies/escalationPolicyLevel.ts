@@ -1,7 +1,8 @@
 import InvalidArgumentError from '@ans/ctx-shared/domain/invalidArgumentError';
-import EscalationTarget from '@src/monitoredServices/domain/escalationTarget';
-import { EscalationTargetEmailPrimitives } from '@src/monitoredServices/domain/escalationTargetEmail';
-import { EscalationTargetSMSPrimitives } from '@src/monitoredServices/domain/escalationTargetSMS';
+import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
+import { EscalationTargetEmailPrimitives } from '@src/shared/domain/escalationPolicies/escalationTargetEmail';
+import { EscalationTargetSMSPrimitives } from '@src/shared/domain/escalationPolicies/escalationTargetSMS';
+import EscalationTargetFactory from '@src/shared/domain/escalationPolicies/escalationTargetTypeFactory';
 
 export type EscalationPolicyLevelPrimitives = {
     targets: Array<EscalationTargetEmailPrimitives | EscalationTargetSMSPrimitives>;
@@ -28,6 +29,12 @@ export default class EscalationPolicyLevel {
         if (!isValid) {
             throw new InvalidArgumentError('EscalationPolicyLevel must have at least one target');
         }
+    }
+
+    static fromPrimitives(primitives: EscalationPolicyLevelPrimitives): EscalationPolicyLevel {
+        return new EscalationPolicyLevel(
+            primitives.targets.map(({ type, ...others }) => EscalationTargetFactory.fromPrimitives(type, { ...others }))
+        );
     }
 
     toPrimitives(): EscalationPolicyLevelPrimitives {

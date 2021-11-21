@@ -6,7 +6,7 @@ import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServi
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
 import InvalidArgumentError from '@ans/ctx-shared/domain/invalidArgumentError';
 import MonitoredServiceAlreadyExists from '@src/monitoredServices/domain/monitoredServiceAlreadyExists';
-import EscalationPolicyMother from '@src/monitoredServices/domain/escalationPolicy.mother';
+import EscalationPolicyMother from '@src/shared/domain/escalationPolicies/escalationPolicy.mother';
 import MonitoredServiceCreatedDomainEventMother from '@src/monitoredServices/domain/monitoredServiceCreatedDomainEvent.mother';
 
 describe('monitoredServiceRegistor', () => {

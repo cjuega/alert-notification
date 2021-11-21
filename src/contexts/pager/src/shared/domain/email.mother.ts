@@ -1,5 +1,5 @@
 import MotherCreator from '@ans/ctx-shared/domain/motherCreator.mother';
-import Email from '@src/monitoredServices/domain/email';
+import Email from '@src/shared/domain/email';
 
 export default class EmailMother {
     static create(value: string): Email {

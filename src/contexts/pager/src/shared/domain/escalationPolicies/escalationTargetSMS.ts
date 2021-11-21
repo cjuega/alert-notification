@@ -1,8 +1,9 @@
-import EscalationTarget from '@src/monitoredServices/domain/escalationTarget';
-import EscalationTargetType from '@src/monitoredServices/domain/escalationTargetType';
-import PhoneNumber from '@src/monitoredServices/domain/phoneNumber';
+import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
+import EscalationTargetType from '@src/shared/domain/escalationPolicies/escalationTargetType';
+import PhoneNumber from '@src/shared/domain/phoneNumber';
 
 export type EscalationTargetSMSPrimitives = {
+    type: EscalationTargetType;
     phoneNumber: string;
 };
 
@@ -36,6 +37,9 @@ export default class EscalationTargetSMS extends EscalationTarget {
     }
 
     toPrimitives(): EscalationTargetSMSPrimitives {
-        return { phoneNumber: this.phoneNumber.value };
+        return {
+            type: EscalationTargetSMS.type(),
+            phoneNumber: this.phoneNumber.value
+        };
     }
 }

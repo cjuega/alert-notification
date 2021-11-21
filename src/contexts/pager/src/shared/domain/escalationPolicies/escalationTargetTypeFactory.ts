@@ -1,7 +1,7 @@
-import EscalationTarget from '@src/monitoredServices/domain/escalationTarget';
-import EscalationTargetType from '@src/monitoredServices/domain/escalationTargetType';
-import EscalationTargetEmail, { EscalationTargetEmailPrimitives } from '@src/monitoredServices/domain/escalationTargetEmail';
-import EscalationTargetSMS, { EscalationTargetSMSPrimitives } from '@src/monitoredServices/domain/escalationTargetSMS';
+import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
+import EscalationTargetType from '@src/shared/domain/escalationPolicies/escalationTargetType';
+import EscalationTargetEmail, { EscalationTargetEmailPrimitives } from '@src/shared/domain/escalationPolicies/escalationTargetEmail';
+import EscalationTargetSMS, { EscalationTargetSMSPrimitives } from '@src/shared/domain/escalationPolicies/escalationTargetSMS';
 
 export default class EscalationTargetFactory {
     static fromPrimitives(type: EscalationTargetType, targetData: unknown): EscalationTarget {

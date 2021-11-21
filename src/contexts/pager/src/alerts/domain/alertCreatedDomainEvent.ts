@@ -2,6 +2,7 @@ import { DomainEvent } from '@ans/ctx-shared/domain/bus/event/domainEvent';
 import { Nullable } from '@ans/ctx-shared/domain/nullable';
 import { AlertPrimitives } from '@src/alerts/domain/alertPrimitives';
 import AlertStatus from '@src/alerts/domain/alertStatus';
+import { AlertEscalationPolicyPrimitives } from '@src/alerts/domain/alertEscalationPolicy';
 
 type CreateAlertDomainEventBody = Readonly<Omit<AlertPrimitives, 'id'>>;
 
@@ -14,6 +15,8 @@ export default class AlertCreatedDomainEvent extends DomainEvent {
 
     readonly status: AlertStatus;
 
+    readonly escalationPolicy: AlertEscalationPolicyPrimitives;
+
     readonly createdAt: string;
 
     readonly resolvedAt: Nullable<string>;
@@ -23,6 +26,7 @@ export default class AlertCreatedDomainEvent extends DomainEvent {
         serviceId,
         message,
         status,
+        escalationPolicy,
         createdAt,
         resolvedAt,
         eventId,
@@ -36,19 +40,21 @@ export default class AlertCreatedDomainEvent extends DomainEvent {
         this.serviceId = serviceId;
         this.message = message;
         this.status = status;
+        this.escalationPolicy = escalationPolicy;
         this.createdAt = createdAt;
         this.resolvedAt = resolvedAt;
     }
 
     toPrimitives(): CreateAlertDomainEventBody {
         const {
-            serviceId, message, status, createdAt, resolvedAt
+            serviceId, message, status, escalationPolicy, createdAt, resolvedAt
         } = this;
 
         return {
             serviceId,
             message,
             status,
+            escalationPolicy,
             createdAt,
             resolvedAt
         };
@@ -60,6 +66,7 @@ export default class AlertCreatedDomainEvent extends DomainEvent {
             serviceId: body.serviceId,
             message: body.message,
             status: body.status,
+            escalationPolicy: body.escalationPolicy,
             createdAt: body.createdAt,
             resolvedAt: body.resolvedAt,
             eventId,

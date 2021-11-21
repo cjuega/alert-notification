@@ -1,4 +1,4 @@
-import { EscalationPolicyPrimitives } from '@src/monitoredServices/domain/escalationPolicy';
+import { EscalationPolicyPrimitives } from '@src/shared/domain/escalationPolicies/escalationPolicy';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 
 export type MonitoredServicePrimitives = {

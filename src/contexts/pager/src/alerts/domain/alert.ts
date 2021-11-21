@@ -9,6 +9,8 @@ import AlertMessage from '@src/alerts/domain/alertMessage';
 import AlertCreatedDomainEvent from '@src/alerts/domain/alertCreatedDomainEvent';
 import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import AlertResolvedDomainEvent from '@src/alerts/domain/alertResolvedDomainEvent';
+import AlertEscalatedDomainEvent from '@src/alerts/domain/alertEscalatedDomainEvent';
+import AlertEscalationPolicy from '@src/alerts/domain/alertEscalationPolicy';
 
 export default class Alert extends AggregateRoot {
     readonly id: AlertId;
@@ -18,6 +20,8 @@ export default class Alert extends AggregateRoot {
     readonly message: AlertMessage;
 
     readonly status: AlertStatus;
+
+    private _escalationPolicy: AlertEscalationPolicy;
 
     readonly createdAt: Datetime;
 
@@ -32,6 +36,7 @@ export default class Alert extends AggregateRoot {
         serviceId: MonitoredServiceId,
         message: AlertMessage,
         status: AlertStatus,
+        escalationPolicy: AlertEscalationPolicy,
         createdAt: Datetime,
         resolvedAt: Nullable<Datetime>
     ) {
@@ -41,16 +46,42 @@ export default class Alert extends AggregateRoot {
         this.serviceId = serviceId;
         this.message = message;
         this.status = status;
+        this._escalationPolicy = escalationPolicy;
         this.createdAt = createdAt;
         this._resolvedAt = resolvedAt;
     }
 
-    static create(id: AlertId, serviceId: MonitoredServiceId, message: AlertMessage, createdAt: Datetime): Alert {
-        const alert = new Alert(id, serviceId, message, AlertStatus.Pending, createdAt, null);
+    static create(
+        id: AlertId,
+        serviceId: MonitoredServiceId,
+        message: AlertMessage,
+        escalationPolicy: AlertEscalationPolicy,
+        createdAt: Datetime
+    ): Alert {
+        const alert = new Alert(id, serviceId, message, AlertStatus.Pending, escalationPolicy, createdAt, null);
 
         alert.record(new AlertCreatedDomainEvent(alert.toPrimitives()));
+        alert.recordEscalationDomainEvent();
 
         return alert;
+    }
+
+    private recordEscalationDomainEvent(): void {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { escalationPolicy, ...others } = this.toPrimitives(),
+            currentLevel = this._escalationPolicy.getCurrentLevel();
+
+        this.record(new AlertEscalatedDomainEvent({ ...others, currentLevel: currentLevel.toPrimitives() }));
+    }
+
+    isMaxEscalationLevelReached(): boolean {
+        return this._escalationPolicy.isMaxEscalationLevelReached();
+    }
+
+    escalate(): void {
+        this._escalationPolicy = this._escalationPolicy.escalate();
+
+        this.recordEscalationDomainEvent();
     }
 
     isResolved(): boolean {
@@ -69,6 +100,7 @@ export default class Alert extends AggregateRoot {
             serviceId: this.serviceId.value,
             message: this.message.value,
             status: this.status,
+            escalationPolicy: this._escalationPolicy.toPrimitives(),
             createdAt: this.createdAt.value,
             resolvedAt: this._resolvedAt?.value || null
         };

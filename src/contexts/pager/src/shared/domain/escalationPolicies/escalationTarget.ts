@@ -1,4 +1,4 @@
-import EscalationTargetType from '@src/monitoredServices/domain/escalationTargetType';
+import EscalationTargetType from '@src/shared/domain/escalationPolicies/escalationTargetType';
 
 export default abstract class EscalationTarget {
     static type: () => EscalationTargetType;

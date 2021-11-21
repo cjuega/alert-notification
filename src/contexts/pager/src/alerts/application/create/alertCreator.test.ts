@@ -12,6 +12,8 @@ import AnotherAlertPending from '@src/alerts/domain/anotherAlertPending';
 import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import FindMonitoredServiceResponseMother from '@src/monitoredServices/application/find/findMonitoredServiceResponse.mother';
 import MonitoredServiceNotFound from '@src/monitoredServices/domain/monitoredServiceNotFound';
+import AlertEscalationPolicyMother from '@src/alerts/domain/alertEscalationPolicy.mother';
+import AlertEscalatedDomainEventMother from '@src/alerts/domain/alertEscalatedDomainEvent.mother';
 
 describe('alertCreator', () => {
     it('should create a valid Alert', async () => {
@@ -22,11 +24,13 @@ describe('alertCreator', () => {
             clock = new ClockMock(),
             eventBus = new EventBusMock(),
             useCase = new AlertCreator(queryBus, repository, clock, eventBus),
-            expected = AlertMother.pendingAlert();
+            findMonitoredServiceResponse = FindMonitoredServiceResponseMother.random(),
+            escalationPolicy = AlertEscalationPolicyMother.initFromFindMonitoredServiceResponse(findMonitoredServiceResponse),
+            expected = AlertMother.pendingAlert({ escalationPolicy });
 
         repository.whenSearchThenReturn(null);
         repository.whenSearchPendingByServiceThenReturn(null);
-        queryBus.whenAskThenReturn(FindMonitoredServiceResponseMother.random());
+        queryBus.whenAskThenReturn(findMonitoredServiceResponse);
         clock.whenNowThenReturn(expected.createdAt);
 
         await useCase.run(expected.id, expected.serviceId, expected.message);
@@ -107,7 +111,7 @@ describe('alertCreator', () => {
         }
     });
 
-    it('should publish an AlertCreatedDomainEvent', async () => {
+    it('should publish an AlertCreatedDomainEvent and an AlertEscalatedDomainEvent', async () => {
         expect.hasAssertions();
 
         const queryBus = new QueryBusMock(),
@@ -115,16 +119,18 @@ describe('alertCreator', () => {
             clock = new ClockMock(),
             eventBus = new EventBusMock(),
             useCase = new AlertCreator(queryBus, repository, clock, eventBus),
-            alert = AlertMother.pendingAlert(),
-            expected = AlertCreatedDomainEventMother.fromAlert(alert);
+            findMonitoredServiceResponse = FindMonitoredServiceResponseMother.random(),
+            escalationPolicy = AlertEscalationPolicyMother.initFromFindMonitoredServiceResponse(findMonitoredServiceResponse),
+            alert = AlertMother.pendingAlert({ escalationPolicy }),
+            expected = [AlertCreatedDomainEventMother.fromAlert(alert), AlertEscalatedDomainEventMother.fromAlert(alert)];
 
         repository.whenSearchThenReturn(null);
         repository.whenSearchPendingByServiceThenReturn(null);
-        queryBus.whenAskThenReturn(FindMonitoredServiceResponseMother.random());
+        queryBus.whenAskThenReturn(findMonitoredServiceResponse);
         clock.whenNowThenReturn(alert.createdAt);
 
         await useCase.run(alert.id, alert.serviceId, alert.message);
 
-        eventBus.assertLastPublishedEventIs(expected);
+        eventBus.assertLastPublishedEventsAre(expected);
     });
 });

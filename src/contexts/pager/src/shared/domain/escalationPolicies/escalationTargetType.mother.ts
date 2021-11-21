@@ -1,5 +1,5 @@
 import MotherCreator from '@ans/ctx-shared/domain/motherCreator.mother';
-import EscalationTargetType from '@src/monitoredServices/domain/escalationTargetType';
+import EscalationTargetType from '@src/shared/domain/escalationPolicies/escalationTargetType';
 
 export default class EscalationTargetTypeMother {
     static random(): EscalationTargetType {

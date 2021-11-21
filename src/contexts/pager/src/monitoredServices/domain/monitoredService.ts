@@ -3,7 +3,7 @@ import AggregateRoot from '@ans/ctx-shared/domain/aggregateRoot';
 import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import MonitoredServiceName from '@src/monitoredServices/domain/monitoredServiceName';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
-import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
+import EscalationPolicy from '@src/shared/domain/escalationPolicies/escalationPolicy';
 import MonitoredServiceCreatedDomainEvent from '@src/monitoredServices/domain/monitoredServiceCreatedDomainEvent';
 import { MonitoredServicePrimitives } from '@src/monitoredServices/domain/monitoredServicePrimitives';
 import MonitoredServiceStatusChangedDomainEvent from '@src/monitoredServices/domain/monitoredServiceStatusChangedDomainEvent';

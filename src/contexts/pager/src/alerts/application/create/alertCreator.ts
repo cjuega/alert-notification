@@ -9,6 +9,8 @@ import { AlertRepository } from '@src/alerts/domain/alertRepository';
 import AnotherAlertPending from '@src/alerts/domain/anotherAlertPending';
 import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import FindMonitoredServiceQuery from '@src/monitoredServices/application/find/findMonitoredServiceQuery';
+import AlertEscalationPolicy from '@src/alerts/domain/alertEscalationPolicy';
+import FindMonitoredServiceResponse from '@src/monitoredServices/application/find/findMonitoredServiceResponse';
 
 export default class AlertCreator {
     private queryBus: QueryBus;
@@ -29,9 +31,9 @@ export default class AlertCreator {
     async run(id: AlertId, serviceId: MonitoredServiceId, message: AlertMessage): Promise<void> {
         await this.ensureAlertDoesntExist(id);
         await this.ensureThereIsntAPendingAlertFor(serviceId);
-        await this.ensureMonitoredServiceExists(serviceId);
 
-        const alert = Alert.create(id, serviceId, message, this.clock.now());
+        const escalationPolicy = await this.queryEscalationPolicy(serviceId),
+            alert = Alert.create(id, serviceId, message, escalationPolicy, this.clock.now());
 
         await this.repository.save(alert);
         await this.eventBus.publish(alert.pullDomainEvents());
@@ -53,10 +55,10 @@ export default class AlertCreator {
         }
     }
 
-    private async ensureMonitoredServiceExists(serviceId: MonitoredServiceId): Promise<void> {
+    private async queryEscalationPolicy(serviceId: MonitoredServiceId): Promise<AlertEscalationPolicy> {
         const query = new FindMonitoredServiceQuery({ id: serviceId.value }),
-            { monitoredService } = await this.queryBus.ask(query);
+            { monitoredService }: FindMonitoredServiceResponse = await this.queryBus.ask(query);
 
-        console.log(monitoredService);
+        return AlertEscalationPolicy.init(monitoredService.escalationPolicy);
     }
 }

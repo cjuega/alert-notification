@@ -1,8 +1,8 @@
-import EscalationTargetType from '@src/monitoredServices/domain/escalationTargetType';
-import EscalationTarget from '@src/monitoredServices/domain/escalationTarget';
-import EscalationTargetTypeMother from '@src/monitoredServices/domain/escalationTargetType.mother';
-import EscalationTargetEmailMother from '@src/monitoredServices/domain/escalationTargetEmail.mother';
-import EscalationTargetSMSMother from '@src/monitoredServices/domain/escalationTargetSMS.mother';
+import EscalationTargetType from '@src/shared/domain/escalationPolicies/escalationTargetType';
+import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
+import EscalationTargetTypeMother from '@src/shared/domain/escalationPolicies/escalationTargetType.mother';
+import EscalationTargetEmailMother from '@src/shared/domain/escalationPolicies/escalationTargetEmail.mother';
+import EscalationTargetSMSMother from '@src/shared/domain/escalationPolicies/escalationTargetSMS.mother';
 
 export default class EscalationTargetMother {
     private static getConcreteMother(type: EscalationTargetType): any {

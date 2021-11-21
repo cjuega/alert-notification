@@ -3,8 +3,8 @@ import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.moth
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 import MonitoredServiceStatusMother from '@src/monitoredServices/domain/monitoredServiceStatus.mother';
-import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
-import EscalationPolicyMother from '@src/monitoredServices/domain/escalationPolicy.mother';
+import EscalationPolicy from '@src/shared/domain/escalationPolicies/escalationPolicy';
+import EscalationPolicyMother from '@src/shared/domain/escalationPolicies/escalationPolicy.mother';
 import Repeater from '@ans/ctx-shared/domain/repeater.mother';
 import MonitoredServiceName from '@src/monitoredServices/domain/monitoredServiceName';
 
