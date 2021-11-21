@@ -1,4 +1,4 @@
-import MonitoredService, { MonitoredServiceUpdatableProps } from '@src/monitoredServices/domain/monitoredService';
+import MonitoredService from '@src/monitoredServices/domain/monitoredService';
 import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
@@ -28,10 +28,6 @@ export default class MonitoredServiceMother {
         return MonitoredServiceMother.create(id, name, status, escalationPolicy);
     }
 
-    static invalid(): { id: string; name: string } {
-        return { id: 'invalid value', name: "there aren't validations for name" };
-    }
-
     static randomList(nItems?: number, overwrites?: { status?: MonitoredServiceStatus }): MonitoredService[] {
         return Repeater.random(() => MonitoredServiceMother.random(overwrites), nItems);
     }
@@ -48,13 +44,5 @@ export default class MonitoredServiceMother {
                 : EscalationPolicyMother.clone(service.escalationPolicy);
 
         return MonitoredServiceMother.create(id, name, status, escalationPolicy);
-    }
-
-    static toggleStatus(service: MonitoredService): MonitoredService {
-        return MonitoredServiceMother.clone(service, { status: MonitoredServiceStatusMother.toggle(service.status) });
-    }
-
-    static applyUpdates(service: MonitoredService, updates: MonitoredServiceUpdatableProps): MonitoredService {
-        return MonitoredServiceMother.clone(service, updates);
     }
 }

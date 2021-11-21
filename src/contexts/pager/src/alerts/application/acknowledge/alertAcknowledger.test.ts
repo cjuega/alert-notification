@@ -1,10 +1,11 @@
 import EventBusMock from '@ans/ctx-shared/__mocks__/eventBus.mock';
 import AlertMother from '@src/alerts/domain/alert.mother';
-import AlertIdMother from '@src/alerts/domain/alertId.mother';
 import AlertNotFound from '@src/alerts/domain/alertNotFound';
 import AlertRepositoryMock from '@src/alerts/__mocks__/alertRepository.mock';
 import AlertAcknowledger from '@src/alerts/application/acknowledge/alertAcknowledger';
 import AlertAcknowledgedDomainEventMother from '@src/alerts/domain/alertAcknowledgedDomainEvent.mother';
+import AcknowledgeAlertCommandHandler from '@src/alerts/application/acknowledge/acknowledgeAlertCommandHandler';
+import AcknowledgeAlertCommandMother from '@src/alerts/application/acknowledge/acknowledgeAlertCommand.mother';
 
 describe('alertAcknowledger', () => {
     it("should throw a AlertNotFound when acknowledging an Alert that doesn't exist", async () => {
@@ -12,14 +13,15 @@ describe('alertAcknowledger', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertAcknowledger(repository, eventBus);
+            handler = new AcknowledgeAlertCommandHandler(new AlertAcknowledger(repository, eventBus)),
+            command = AcknowledgeAlertCommandMother.random();
 
         repository.whenSearchThenReturn(null);
 
         let error;
 
         try {
-            await useCase.run(AlertIdMother.random());
+            await handler.handle(command);
         } catch (e) {
             error = e;
         } finally {
@@ -32,12 +34,13 @@ describe('alertAcknowledger', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertAcknowledger(repository, eventBus),
-            alert = AlertMother.notPendingAlert();
+            handler = new AcknowledgeAlertCommandHandler(new AlertAcknowledger(repository, eventBus)),
+            alert = AlertMother.notPendingAlert(),
+            command = AcknowledgeAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         repository.assertNothingSaved();
     });
@@ -47,12 +50,13 @@ describe('alertAcknowledger', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertAcknowledger(repository, eventBus),
-            alert = AlertMother.notPendingAlert();
+            handler = new AcknowledgeAlertCommandHandler(new AlertAcknowledger(repository, eventBus)),
+            alert = AlertMother.notPendingAlert(),
+            command = AcknowledgeAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         eventBus.assertNothingPublished();
     });
@@ -62,13 +66,14 @@ describe('alertAcknowledger', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertAcknowledger(repository, eventBus),
+            handler = new AcknowledgeAlertCommandHandler(new AlertAcknowledger(repository, eventBus)),
             alert = AlertMother.pendingAlert(),
+            command = AcknowledgeAlertCommandMother.create({ id: alert.id.value }),
             expected = AlertMother.acknowledge(alert);
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         repository.assertSaveHasBeenCalledWith(expected);
     });
@@ -78,13 +83,14 @@ describe('alertAcknowledger', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertAcknowledger(repository, eventBus),
+            handler = new AcknowledgeAlertCommandHandler(new AlertAcknowledger(repository, eventBus)),
             alert = AlertMother.pendingAlert(),
+            command = AcknowledgeAlertCommandMother.create({ id: alert.id.value }),
             expected = AlertAcknowledgedDomainEventMother.fromAlert(AlertMother.acknowledge(alert));
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         eventBus.assertLastPublishedEventIs(expected);
     });

@@ -2,11 +2,12 @@ import ClockMock from '@ans/ctx-shared/__mocks__/clock.mock';
 import EventBusMock from '@ans/ctx-shared/__mocks__/eventBus.mock';
 import AlertRepositoryMock from '@src/alerts/__mocks__/alertRepository.mock';
 import AlertMother from '@src/alerts/domain/alert.mother';
-import AlertIdMother from '@src/alerts/domain/alertId.mother';
 import AlertNotFound from '@src/alerts/domain/alertNotFound';
 import AlertResolver from '@src/alerts/application/resolve/alertResolver';
 import DatetimeMother from '@ans/ctx-shared/domain/datetime.mother';
 import AlertResolvedDomainEventMother from '@src/alerts/domain/alertResolvedDomainEvent.mother';
+import ResolveAlertCommandMother from '@src/alerts/application/resolve/resolveAlertCommand.mother';
+import ResolveAlertCommandHandler from '@src/alerts/application/resolve/resolveAlertCommandHandler';
 
 describe('alertResolver', () => {
     it("should throw a AlertNotFound when resolving an Alert that doesn't exist", async () => {
@@ -15,14 +16,15 @@ describe('alertResolver', () => {
         const repository = new AlertRepositoryMock(),
             clock = new ClockMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertResolver(repository, clock, eventBus);
+            handler = new ResolveAlertCommandHandler(new AlertResolver(repository, clock, eventBus)),
+            command = ResolveAlertCommandMother.random();
 
         repository.whenSearchThenReturn(null);
 
         let error;
 
         try {
-            await useCase.run(AlertIdMother.random());
+            await handler.handle(command);
         } catch (e) {
             error = e;
         } finally {
@@ -36,12 +38,13 @@ describe('alertResolver', () => {
         const repository = new AlertRepositoryMock(),
             clock = new ClockMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertResolver(repository, clock, eventBus),
-            alert = AlertMother.resolvedAlert();
+            handler = new ResolveAlertCommandHandler(new AlertResolver(repository, clock, eventBus)),
+            alert = AlertMother.resolvedAlert(),
+            command = ResolveAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         repository.assertNothingSaved();
     });
@@ -52,12 +55,13 @@ describe('alertResolver', () => {
         const repository = new AlertRepositoryMock(),
             clock = new ClockMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertResolver(repository, clock, eventBus),
-            alert = AlertMother.resolvedAlert();
+            handler = new ResolveAlertCommandHandler(new AlertResolver(repository, clock, eventBus)),
+            alert = AlertMother.resolvedAlert(),
+            command = ResolveAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         eventBus.assertNothingPublished();
     });
@@ -68,15 +72,16 @@ describe('alertResolver', () => {
         const repository = new AlertRepositoryMock(),
             clock = new ClockMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertResolver(repository, clock, eventBus),
+            handler = new ResolveAlertCommandHandler(new AlertResolver(repository, clock, eventBus)),
             alert = AlertMother.pendingAlert(),
+            command = ResolveAlertCommandMother.create({ id: alert.id.value }),
             resolvedAt = DatetimeMother.random(),
             expected = AlertMother.resolve(alert, resolvedAt);
 
         repository.whenSearchThenReturn(alert);
         clock.whenNowThenReturn(resolvedAt);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         repository.assertSaveHasBeenCalledWith(expected);
     });
@@ -87,15 +92,16 @@ describe('alertResolver', () => {
         const repository = new AlertRepositoryMock(),
             clock = new ClockMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertResolver(repository, clock, eventBus),
+            handler = new ResolveAlertCommandHandler(new AlertResolver(repository, clock, eventBus)),
             alert = AlertMother.pendingAlert(),
+            command = ResolveAlertCommandMother.create({ id: alert.id.value }),
             resolvedAt = DatetimeMother.random(),
             expected = AlertResolvedDomainEventMother.fromAlert(AlertMother.resolve(alert, resolvedAt));
 
         repository.whenSearchThenReturn(alert);
         clock.whenNowThenReturn(resolvedAt);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         eventBus.assertLastPublishedEventIs(expected);
     });

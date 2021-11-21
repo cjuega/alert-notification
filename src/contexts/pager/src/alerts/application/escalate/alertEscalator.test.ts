@@ -1,11 +1,12 @@
 import EventBusMock from '@ans/ctx-shared/__mocks__/eventBus.mock';
 import AlertMother from '@src/alerts/domain/alert.mother';
-import AlertIdMother from '@src/alerts/domain/alertId.mother';
 import AlertNotFound from '@src/alerts/domain/alertNotFound';
 import AlertRepositoryMock from '@src/alerts/__mocks__/alertRepository.mock';
 import AlertEscalator from '@src/alerts/application/escalate/alertEscalator';
 import AlertEscalatedDomainEventMother from '@src/alerts/domain/alertEscalatedDomainEvent.mother';
 import AlertStatus from '@src/alerts/domain/alertStatus';
+import EscalateAlertCommandMother from '@src/alerts/application/escalate/escalateAlertCommand.mother';
+import EscalateAlertCommandHandler from '@src/alerts/application/escalate/escalateAlertCommandHandler';
 
 describe('alertEscalator', () => {
     it("should throw a AlertNotFound when escalating an Alert that doesn't exist", async () => {
@@ -13,14 +14,15 @@ describe('alertEscalator', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertEscalator(repository, eventBus);
+            handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
+            command = EscalateAlertCommandMother.random();
 
         repository.whenSearchThenReturn(null);
 
         let error;
 
         try {
-            await useCase.run(AlertIdMother.random());
+            await handler.handle(command);
         } catch (e) {
             error = e;
         } finally {
@@ -33,12 +35,13 @@ describe('alertEscalator', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertEscalator(repository, eventBus),
-            alert = AlertMother.resolvedAlert();
+            handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
+            alert = AlertMother.resolvedAlert(),
+            command = EscalateAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         repository.assertNothingSaved();
     });
@@ -48,12 +51,13 @@ describe('alertEscalator', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertEscalator(repository, eventBus),
-            alert = AlertMother.resolvedAlert();
+            handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
+            alert = AlertMother.resolvedAlert(),
+            command = EscalateAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         eventBus.assertNothingPublished();
     });
@@ -63,12 +67,13 @@ describe('alertEscalator', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertEscalator(repository, eventBus),
-            alert = AlertMother.maxEscalationReached();
+            handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
+            alert = AlertMother.maxEscalationReached(),
+            command = EscalateAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         repository.assertNothingSaved();
     });
@@ -78,12 +83,13 @@ describe('alertEscalator', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertEscalator(repository, eventBus),
-            alert = AlertMother.maxEscalationReached();
+            handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
+            alert = AlertMother.maxEscalationReached(),
+            command = EscalateAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         eventBus.assertNothingPublished();
     });
@@ -93,13 +99,14 @@ describe('alertEscalator', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertEscalator(repository, eventBus),
+            handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
             alert = AlertMother.maxEscalationNotReached({ status: AlertStatus.Pending }),
+            command = EscalateAlertCommandMother.create({ id: alert.id.value }),
             expected = AlertMother.escalate(alert);
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         repository.assertSaveHasBeenCalledWith(expected);
     });
@@ -109,13 +116,14 @@ describe('alertEscalator', () => {
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
-            useCase = new AlertEscalator(repository, eventBus),
+            handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
             alert = AlertMother.maxEscalationNotReached({ status: AlertStatus.Pending }),
+            command = EscalateAlertCommandMother.create({ id: alert.id.value }),
             expected = AlertEscalatedDomainEventMother.fromAlert(AlertMother.escalate(alert));
 
         repository.whenSearchThenReturn(alert);
 
-        await useCase.run(alert.id);
+        await handler.handle(command);
 
         eventBus.assertLastPublishedEventIs(expected);
     });

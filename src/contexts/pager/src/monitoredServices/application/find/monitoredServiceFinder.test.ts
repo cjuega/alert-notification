@@ -1,23 +1,25 @@
 import MonitoredServiceRepositoryMock from '@src/monitoredServices/__mocks__/monitoredServiceRepository.mock';
 import MonitoredServiceFinder from '@src/monitoredServices/application/find/monitoredServiceFinder';
-import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import MonitoredServiceNotFound from '@src/monitoredServices/domain/monitoredServiceNotFound';
 import MonitoredServiceMother from '@src/monitoredServices/domain/monitoredService.mother';
+import FindMonitoredServiceQueryHandler from '@src/monitoredServices/application/find/findMonitoredServiceQueryHandler';
 import FindMonitoredServiceResponseMother from '@src/monitoredServices/application/find/findMonitoredServiceResponse.mother';
+import FindMonitoredServiceQueryMother from '@src/monitoredServices/application/find/findMonitoredServiceQuery.mother';
 
 describe('monitoredServiceFinder', () => {
     it("should throw a MonitoredServiceNotFound when the MonitoredService doesn't exist", async () => {
         expect.hasAssertions();
 
         const repository = new MonitoredServiceRepositoryMock(),
-            useCase = new MonitoredServiceFinder(repository);
+            handler = new FindMonitoredServiceQueryHandler(new MonitoredServiceFinder(repository)),
+            query = FindMonitoredServiceQueryMother.random();
 
         repository.whenSearchThenReturn(null);
 
         let error;
 
         try {
-            await useCase.run(MonitoredServiceIdMother.random());
+            await handler.handle(query);
         } catch (e) {
             error = e;
         } finally {
@@ -29,14 +31,15 @@ describe('monitoredServiceFinder', () => {
         expect.hasAssertions();
 
         const repository = new MonitoredServiceRepositoryMock(),
-            useCase = new MonitoredServiceFinder(repository),
+            handler = new FindMonitoredServiceQueryHandler(new MonitoredServiceFinder(repository)),
             service = MonitoredServiceMother.random(),
+            query = FindMonitoredServiceQueryMother.create({ id: service.id.value }),
             expected = FindMonitoredServiceResponseMother.fromMonitoredService(service);
 
         repository.whenSearchThenReturn(service);
 
         // eslint-disable-next-line one-var
-        const response = await useCase.run(service.id);
+        const response = await handler.handle(query);
 
         repository.assertSearchHasBeenCalledWith(service.id);
         expect(response).toStrictEqual(expected);
