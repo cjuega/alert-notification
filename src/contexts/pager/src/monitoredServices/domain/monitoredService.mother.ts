@@ -7,15 +7,21 @@ import EscalationPolicy from '@src/shared/domain/escalationPolicies/escalationPo
 import EscalationPolicyMother from '@src/shared/domain/escalationPolicies/escalationPolicy.mother';
 import Repeater from '@ans/ctx-shared/domain/repeater.mother';
 import MonitoredServiceName from '@src/monitoredServices/domain/monitoredServiceName';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 
 export default class MonitoredServiceMother {
-    static create(id: string, name: string, status: MonitoredServiceStatus, escalationPolicy: EscalationPolicy): MonitoredService {
+    static create(
+        id: MonitoredServiceId,
+        name: MonitoredServiceName,
+        status: MonitoredServiceStatus,
+        escalationPolicy: EscalationPolicy
+    ): MonitoredService {
         return new MonitoredService(id, name, status, escalationPolicy);
     }
 
     static random(overwrites?: { status?: MonitoredServiceStatus }): MonitoredService {
-        const id = MonitoredServiceIdMother.random().value,
-            name = MonitoredServiceNameMother.random().value,
+        const id = MonitoredServiceIdMother.random(),
+            name = MonitoredServiceNameMother.random(),
             status = overwrites?.status ? overwrites.status : MonitoredServiceStatusMother.random(),
             escalationPolicy = EscalationPolicyMother.random();
 
@@ -41,7 +47,7 @@ export default class MonitoredServiceMother {
                 ? overwrites.escalationPolicy
                 : EscalationPolicyMother.clone(service.escalationPolicy);
 
-        return MonitoredServiceMother.create(id.value, name.value, status, escalationPolicy);
+        return MonitoredServiceMother.create(id, name, status, escalationPolicy);
     }
 
     static toggleStatus(service: MonitoredService): MonitoredService {

@@ -4,7 +4,6 @@ import MonitoredServiceRegistor from '@src/monitoredServices/application/registe
 import MonitoredServiceMother from '@src/monitoredServices/domain/monitoredService.mother';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
-import InvalidArgumentError from '@ans/ctx-shared/domain/invalidArgumentError';
 import MonitoredServiceAlreadyExists from '@src/monitoredServices/domain/monitoredServiceAlreadyExists';
 import EscalationPolicyMother from '@src/shared/domain/escalationPolicies/escalationPolicy.mother';
 import MonitoredServiceCreatedDomainEventMother from '@src/monitoredServices/domain/monitoredServiceCreatedDomainEvent.mother';
@@ -20,31 +19,33 @@ describe('monitoredServiceRegistor', () => {
 
         repository.whenSearchThenReturn(null);
 
-        await useCase.run(expected.id.value, expected.name.value, expected.escalationPolicy);
+        await useCase.run(expected.id, expected.name, expected.escalationPolicy);
 
         repository.assertSaveHasBeenCalledWith(expected);
     });
 
-    it('should throw an InvalidArgumentError when creating an invalid MonitoredService', async () => {
-        expect.hasAssertions();
+    // FIXME: uncomment when Controllers and Use cases are decoupled with Command/Query buses. Otherwise, this is an e2e test
+    // eslint-disable-next-line jest/no-commented-out-tests
+    // it('should throw an InvalidArgumentError when creating an invalid MonitoredService', async () => {
+    //     expect.hasAssertions();
 
-        const repository = new MonitoredServiceRepositoryMock(),
-            eventBus = new EventBusMock(),
-            useCase = new MonitoredServiceRegistor(repository, eventBus),
-            { id, name } = MonitoredServiceMother.invalid();
+    //     const repository = new MonitoredServiceRepositoryMock(),
+    //         eventBus = new EventBusMock(),
+    //         useCase = new MonitoredServiceRegistor(repository, eventBus),
+    //         { id, name } = MonitoredServiceMother.invalid();
 
-        repository.whenSearchThenReturn(null);
+    //     repository.whenSearchThenReturn(null);
 
-        let error;
+    //     let error;
 
-        try {
-            await useCase.run(id, name, EscalationPolicyMother.random());
-        } catch (e) {
-            error = e;
-        } finally {
-            expect(error).toBeInstanceOf(InvalidArgumentError);
-        }
-    });
+    //     try {
+    //         await useCase.run(id, name, EscalationPolicyMother.random());
+    //     } catch (e) {
+    //         error = e;
+    //     } finally {
+    //         expect(error).toBeInstanceOf(InvalidArgumentError);
+    //     }
+    // });
 
     it('should throw a MonitoredServiceAlreadyExists when creating a MonitoredService which id already exists', async () => {
         expect.hasAssertions();
@@ -59,7 +60,7 @@ describe('monitoredServiceRegistor', () => {
         let error;
 
         try {
-            await useCase.run(monitoredService.id.value, MonitoredServiceNameMother.random().value, EscalationPolicyMother.random());
+            await useCase.run(monitoredService.id, MonitoredServiceNameMother.random(), EscalationPolicyMother.random());
         } catch (e) {
             error = e;
         } finally {
@@ -78,7 +79,7 @@ describe('monitoredServiceRegistor', () => {
 
         repository.whenSearchThenReturn(null);
 
-        await useCase.run(monitoredService.id.value, monitoredService.name.value, monitoredService.escalationPolicy);
+        await useCase.run(monitoredService.id, monitoredService.name, monitoredService.escalationPolicy);
 
         eventBus.assertLastPublishedEventIs(expected);
     });

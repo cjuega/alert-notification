@@ -4,6 +4,7 @@ import MonitoredService from '@src/monitoredServices/domain/monitoredService';
 import MonitoredServiceAlreadyExists from '@src/monitoredServices/domain/monitoredServiceAlreadyExists';
 import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import { MonitoredServiceRepository } from '@src/monitoredServices/domain/monitoredServiceRepository';
+import MonitoredServiceName from '@src/monitoredServices/domain/monitoredServiceName';
 
 export default class MonitoredServiceRegistor {
     private repository: MonitoredServiceRepository;
@@ -15,20 +16,20 @@ export default class MonitoredServiceRegistor {
         this.eventBus = eventBus;
     }
 
-    async run(serviceId: string, serviceName: string, escalationPolicy: EscalationPolicy): Promise<void> {
-        await this.ensureMonitoredServiceDoesntExist(serviceId);
+    async run(id: MonitoredServiceId, name: MonitoredServiceName, escalationPolicy: EscalationPolicy): Promise<void> {
+        await this.ensureMonitoredServiceDoesntExist(id);
 
-        const service = MonitoredService.create(serviceId, serviceName, escalationPolicy);
+        const service = MonitoredService.create(id, name, escalationPolicy);
 
         await this.repository.save(service);
         await this.eventBus.publish(service.pullDomainEvents());
     }
 
-    private async ensureMonitoredServiceDoesntExist(serviceId: string): Promise<void> {
-        const service = await this.repository.search(new MonitoredServiceId(serviceId));
+    private async ensureMonitoredServiceDoesntExist(id: MonitoredServiceId): Promise<void> {
+        const service = await this.repository.search(id);
 
         if (service) {
-            throw new MonitoredServiceAlreadyExists(serviceId);
+            throw new MonitoredServiceAlreadyExists(id.value);
         }
     }
 }

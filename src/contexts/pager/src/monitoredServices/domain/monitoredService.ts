@@ -34,16 +34,16 @@ export default class MonitoredService extends AggregateRoot {
         return EscalationPolicy.clone(this._escalationPolicy);
     }
 
-    constructor(id: string, name: string, status: MonitoredServiceStatus, escalationPolicy: EscalationPolicy) {
+    constructor(id: MonitoredServiceId, name: MonitoredServiceName, status: MonitoredServiceStatus, escalationPolicy: EscalationPolicy) {
         super();
 
-        this.id = new MonitoredServiceId(id);
-        this._name = new MonitoredServiceName(name);
+        this.id = id;
+        this._name = name;
         this._status = status;
         this._escalationPolicy = escalationPolicy;
     }
 
-    static create(id: string, name: string, escalationPolicy: EscalationPolicy): MonitoredService {
+    static create(id: MonitoredServiceId, name: MonitoredServiceName, escalationPolicy: EscalationPolicy): MonitoredService {
         const service = new MonitoredService(id, name, MonitoredServiceStatus.Healthy, escalationPolicy);
 
         service.record(new MonitoredServiceCreatedDomainEvent(service.toPrimitives()));
