@@ -34,4 +34,12 @@ export default class MotherCreator {
 
         return faker.phone.phoneNumber(format);
     }
+
+    static text(): string {
+        return faker.lorem.paragraph();
+    }
+
+    static recentDate(): Date {
+        return faker.date.recent();
+    }
 }

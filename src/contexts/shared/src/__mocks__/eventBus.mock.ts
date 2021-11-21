@@ -3,10 +3,10 @@ import { DomainEvent } from '@src/domain/bus/event/domainEvent';
 import { DomainEventSubscriber } from '@src/domain/bus/event/domainEventSubscriber';
 
 export default class EventBusMock implements EventBus {
-    private publishSpy = jest.fn();
+    private mockPublish = jest.fn();
 
     async publish(events: DomainEvent[]): Promise<void> {
-        await this.publishSpy(events);
+        await this.mockPublish(events);
     }
 
     // eslint-disable-next-line class-methods-use-this,@typescript-eslint/no-unused-vars
@@ -15,7 +15,7 @@ export default class EventBusMock implements EventBus {
     }
 
     assertLastPublishedEventIs(expectedEvent: DomainEvent): void {
-        const publishSpyCalls = this.publishSpy.mock.calls,
+        const publishSpyCalls = this.mockPublish.mock.calls,
             lastPublishSpyCall = publishSpyCalls[publishSpyCalls.length - 1],
             lastPublishedEvent = lastPublishSpyCall[0][0];
 
@@ -25,7 +25,7 @@ export default class EventBusMock implements EventBus {
     }
 
     assertLastPublishedEventsAre(events: DomainEvent[]): void {
-        const publishSpyCalls = this.publishSpy.mock.calls,
+        const publishSpyCalls = this.mockPublish.mock.calls,
             lastPublishSpyCall = publishSpyCalls[publishSpyCalls.length - 1],
             lastPublishedEvents = lastPublishSpyCall[0];
 
@@ -40,7 +40,7 @@ export default class EventBusMock implements EventBus {
     }
 
     assertPublishedEventsAre(events: DomainEvent[]): void {
-        const { mock } = this.publishSpy,
+        const { mock } = this.mockPublish,
             callsArgument = mock.calls.map((c) => this.getDataFromDomainEvent(c[0][0]));
 
         expect(mock.calls).toHaveLength(events.length);
@@ -51,7 +51,7 @@ export default class EventBusMock implements EventBus {
     }
 
     assertEmptyPublished(): void {
-        const publishSpyCalls = this.publishSpy.mock.calls,
+        const publishSpyCalls = this.mockPublish.mock.calls,
             lastPublishSpyCall = publishSpyCalls[publishSpyCalls.length - 1],
             lastPublishedEvents = lastPublishSpyCall[0];
 
@@ -59,7 +59,7 @@ export default class EventBusMock implements EventBus {
     }
 
     assertNothingPublished(): void {
-        const publishSpyCalls = this.publishSpy.mock.calls;
+        const publishSpyCalls = this.mockPublish.mock.calls;
 
         expect(publishSpyCalls).toHaveLength(0);
     }
