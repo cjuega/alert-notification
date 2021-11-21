@@ -47,6 +47,13 @@ export default class AlertMother {
         return AlertMother.random({ ...overwrites, status: AlertStatus.Pending, resolvedAt: null });
     }
 
+    static notPendingAlert(): Alert {
+        const status = MotherCreator.boolean() ? AlertStatus.Acknowledged : AlertStatus.Resolved,
+            resolvedAt = status === AlertStatus.Resolved ? DatetimeMother.random() : null;
+
+        return AlertMother.random({ status, resolvedAt });
+    }
+
     static resolvedAlert(): Alert {
         return AlertMother.random({ status: AlertStatus.Resolved, resolvedAt: DatetimeMother.random() });
     }
@@ -59,11 +66,14 @@ export default class AlertMother {
         return AlertMother.random({ escalationPolicy: AlertEscalationPolicyMother.maxEscalationReached() });
     }
 
-    static clone(alert: Alert, overwrites?: { escalationPolicy?: AlertEscalationPolicy; resolvedAt?: Datetime }): Alert {
+    static clone(
+        alert: Alert,
+        overwrites?: { status?: AlertStatus; escalationPolicy?: AlertEscalationPolicy; resolvedAt?: Datetime }
+    ): Alert {
         const { id } = alert,
             { serviceId } = alert,
             { message } = alert,
-            { status } = alert,
+            status = overwrites?.status ? overwrites.status : alert.status,
             // FIXME: Replace this ugly way to clone EscalationPolicy whenever we need escalationPolicy to be public
             escalationPolicy = overwrites?.escalationPolicy
                 ? overwrites.escalationPolicy
@@ -75,7 +85,11 @@ export default class AlertMother {
     }
 
     static resolve(alert: Alert, resolvedAt: Datetime): Alert {
-        return AlertMother.clone(alert, { resolvedAt });
+        return AlertMother.clone(alert, { status: AlertStatus.Resolved, resolvedAt });
+    }
+
+    static acknowledge(alert: Alert): Alert {
+        return AlertMother.clone(alert, { status: AlertStatus.Acknowledged });
     }
 
     static escalate(alert: Alert): Alert {

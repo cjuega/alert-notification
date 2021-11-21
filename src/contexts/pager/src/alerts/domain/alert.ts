@@ -11,6 +11,7 @@ import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import AlertResolvedDomainEvent from '@src/alerts/domain/alertResolvedDomainEvent';
 import AlertEscalatedDomainEvent from '@src/alerts/domain/alertEscalatedDomainEvent';
 import AlertEscalationPolicy from '@src/alerts/domain/alertEscalationPolicy';
+import AlertAcknowledgedDomainEvent from '@src/alerts/domain/alertAcknowledgedDomainEvent';
 
 export default class Alert extends AggregateRoot {
     readonly id: AlertId;
@@ -19,13 +20,17 @@ export default class Alert extends AggregateRoot {
 
     readonly message: AlertMessage;
 
-    readonly status: AlertStatus;
+    private _status: AlertStatus;
 
     private _escalationPolicy: AlertEscalationPolicy;
 
     readonly createdAt: Datetime;
 
     private _resolvedAt: Nullable<Datetime>;
+
+    get status(): AlertStatus {
+        return this._status;
+    }
 
     get resolvedAt(): Nullable<Datetime> {
         return this._resolvedAt ? Datetime.clone(this._resolvedAt) : null;
@@ -45,7 +50,7 @@ export default class Alert extends AggregateRoot {
         this.id = id;
         this.serviceId = serviceId;
         this.message = message;
-        this.status = status;
+        this._status = status;
         this._escalationPolicy = escalationPolicy;
         this.createdAt = createdAt;
         this._resolvedAt = resolvedAt;
@@ -84,11 +89,22 @@ export default class Alert extends AggregateRoot {
         this.recordEscalationDomainEvent();
     }
 
+    isAcknowledged(): boolean {
+        return this.status === AlertStatus.Acknowledged || this.isResolved();
+    }
+
+    acknowledge(): void {
+        this._status = AlertStatus.Acknowledged;
+
+        this.record(new AlertAcknowledgedDomainEvent(this.toPrimitives()));
+    }
+
     isResolved(): boolean {
         return this.status === AlertStatus.Resolved;
     }
 
     resolve(resolvedAt: Datetime): void {
+        this._status = AlertStatus.Resolved;
         this._resolvedAt = resolvedAt;
 
         this.record(new AlertResolvedDomainEvent(this.toPrimitives()));
