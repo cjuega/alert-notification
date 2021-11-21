@@ -3,6 +3,7 @@ import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTa
 import EscalationTargetTypeMother from '@src/shared/domain/escalationPolicies/escalationTargetType.mother';
 import EscalationTargetEmailMother from '@src/shared/domain/escalationPolicies/escalationTargetEmail.mother';
 import EscalationTargetSMSMother from '@src/shared/domain/escalationPolicies/escalationTargetSMS.mother';
+import EscalationTargetFactory from '@src/shared/domain/escalationPolicies/escalationTargetTypeFactory';
 
 export default class EscalationTargetMother {
     private static getConcreteMother(type: EscalationTargetType): any {
@@ -22,5 +23,11 @@ export default class EscalationTargetMother {
         const mother = EscalationTargetMother.getConcreteMother(EscalationTargetTypeMother.random());
 
         return mother.random();
+    }
+
+    static fromPrimitives(primitives: any): EscalationTarget {
+        const { type, ...others } = primitives;
+
+        return EscalationTargetFactory.fromPrimitives(type, { ...others });
     }
 }

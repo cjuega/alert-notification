@@ -3,6 +3,8 @@ import { AlertPrimitives } from '@src/alerts/domain/alertPrimitives';
 import AlertEscalatedDomainEvent from '@src/alerts/domain/alertEscalatedDomainEvent';
 import AlertMother from '@src/alerts/domain/alert.mother';
 import { EscalationPolicyLevelPrimitives } from '@src/shared/domain/escalationPolicies/escalationPolicyLevel';
+import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
+import EscalationTargetMother from '@src/shared/domain/escalationPolicies/escalationTarget.mother';
 
 export default class AlertEscalatedDomainEventMother {
     static create(
@@ -26,5 +28,9 @@ export default class AlertEscalatedDomainEventMother {
         const alert = AlertMother.random();
 
         return AlertEscalatedDomainEventMother.fromAlert(alert);
+    }
+
+    static extractTargets(domainEvent: AlertEscalatedDomainEvent): EscalationTarget[] {
+        return domainEvent.currentLevel.targets.map((t) => EscalationTargetMother.fromPrimitives(t));
     }
 }

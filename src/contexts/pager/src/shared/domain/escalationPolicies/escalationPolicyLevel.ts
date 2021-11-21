@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import InvalidArgumentError from '@ans/ctx-shared/domain/invalidArgumentError';
 import EscalationTarget from '@src/shared/domain/escalationPolicies/escalationTarget';
 import { EscalationTargetEmailPrimitives } from '@src/shared/domain/escalationPolicies/escalationTargetEmail';
@@ -9,12 +10,16 @@ export type EscalationPolicyLevelPrimitives = {
 };
 
 export default class EscalationPolicyLevel {
-    private readonly targets: EscalationTarget[];
+    private readonly _targets: EscalationTarget[];
+
+    get targets(): EscalationTarget[] {
+        return this._targets.map((t) => t.clone());
+    }
 
     constructor(targets: EscalationTarget[]) {
         EscalationPolicyLevel.isValidLevel(targets);
 
-        this.targets = targets;
+        this._targets = targets;
     }
 
     static clone(level: EscalationPolicyLevel): EscalationPolicyLevel {
@@ -39,7 +44,7 @@ export default class EscalationPolicyLevel {
 
     toPrimitives(): EscalationPolicyLevelPrimitives {
         return {
-            targets: this.targets.map((t) => t.toPrimitives()) as Array<EscalationTargetEmailPrimitives | EscalationTargetSMSPrimitives>
+            targets: this._targets.map((t) => t.toPrimitives()) as Array<EscalationTargetEmailPrimitives | EscalationTargetSMSPrimitives>
         };
     }
 }
