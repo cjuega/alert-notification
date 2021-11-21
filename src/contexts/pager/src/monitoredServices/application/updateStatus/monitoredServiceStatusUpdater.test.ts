@@ -8,7 +8,7 @@ import MonitoredServiceMother from '@src/monitoredServices/domain/monitoredServi
 import MonitoredServiceStatusChangedDomainEventMother from '@src/monitoredServices/domain/monitoredServiceStatusChangedDomainEvent.mother';
 
 describe('monitoredServiceStatusUpdater', () => {
-    it("should throw a MonitoredServiceNotFound when updating a service that doesn't exist", async () => {
+    it("should throw a MonitoredServiceNotFound when updating a MonitoredService that doesn't exist", async () => {
         expect.hasAssertions();
 
         const repository = new MonitoredServiceRepositoryMock(),
