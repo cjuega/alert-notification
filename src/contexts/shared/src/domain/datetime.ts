@@ -20,4 +20,10 @@ export default class Datetime extends StringValueObject {
     static clone(datetime: Datetime): Datetime {
         return new Datetime(datetime.value);
     }
+
+    add(seconds: number): Datetime {
+        const date = moment(this.value).add(seconds, 'seconds');
+
+        return new Datetime(date.toISOString());
+    }
 }
