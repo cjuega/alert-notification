@@ -19,6 +19,10 @@ export default class EscalationPolicy {
         this._levels = levels;
     }
 
+    static clone(policy: EscalationPolicy): EscalationPolicy {
+        return new EscalationPolicy(policy.levels);
+    }
+
     private static isValidPolicy(levels: EscalationPolicyLevel[]): void {
         const isValid = levels.length > 0;
 

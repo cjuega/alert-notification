@@ -11,8 +11,8 @@ export default class MonitoredServiceRepositoryMock implements MonitoredServiceR
 
     private mockSearchAll = jest.fn();
 
-    save(service: MonitoredService): Promise<void> {
-        return this.mockSave(service);
+    async save(service: MonitoredService): Promise<void> {
+        this.mockSave(service);
     }
 
     assertSaveHasBeenCalledWith(service: MonitoredService): void {
@@ -35,6 +35,10 @@ export default class MonitoredServiceRepositoryMock implements MonitoredServiceR
 
     whenSearchThenReturn(service: Nullable<MonitoredService>): void {
         this.mockSearch.mockReturnValue(service);
+    }
+
+    assertSearchHasBeenCalledWith(id: MonitoredServiceId): void {
+        expect(this.mockSearch).toHaveBeenLastCalledWith(id);
     }
 
     async searchAll(status?: MonitoredServiceStatus): Promise<MonitoredService[]> {

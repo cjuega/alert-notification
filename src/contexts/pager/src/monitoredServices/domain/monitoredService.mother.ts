@@ -1,4 +1,4 @@
-import MonitoredService from '@src/monitoredServices/domain/monitoredService';
+import MonitoredService, { MonitoredServiceUpdatableProps } from '@src/monitoredServices/domain/monitoredService';
 import MonitoredServiceIdMother from '@src/monitoredServices/domain/monitoredServiceId.mother';
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
@@ -6,6 +6,7 @@ import MonitoredServiceStatusMother from '@src/monitoredServices/domain/monitore
 import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
 import EscalationPolicyMother from '@src/monitoredServices/domain/escalationPolicy.mother';
 import Repeater from '@ans/ctx-shared/domain/repeater.mother';
+import MonitoredServiceName from '@src/monitoredServices/domain/monitoredServiceName';
 
 export default class MonitoredServiceMother {
     static create(id: string, name: string, status: MonitoredServiceStatus, escalationPolicy: EscalationPolicy): MonitoredService {
@@ -29,16 +30,25 @@ export default class MonitoredServiceMother {
         return Repeater.random(() => MonitoredServiceMother.random(overwrites), nItems);
     }
 
-    static clone(service: MonitoredService, overwrites?: { status?: MonitoredServiceStatus }): MonitoredService {
+    static clone(
+        service: MonitoredService,
+        overwrites?: { name?: MonitoredServiceName; status?: MonitoredServiceStatus; escalationPolicy?: EscalationPolicy }
+    ): MonitoredService {
         const id = MonitoredServiceIdMother.create(service.id.value),
-            name = MonitoredServiceNameMother.create(service.name.value),
+            name = overwrites?.name ? overwrites.name : MonitoredServiceNameMother.create(service.name.value),
             status = overwrites?.status ? overwrites.status : service.status,
-            escalationPolicy = EscalationPolicyMother.clone(service.escalationPolicy);
+            escalationPolicy = overwrites?.escalationPolicy
+                ? overwrites.escalationPolicy
+                : EscalationPolicyMother.clone(service.escalationPolicy);
 
         return MonitoredServiceMother.create(id.value, name.value, status, escalationPolicy);
     }
 
     static toggleStatus(service: MonitoredService): MonitoredService {
         return MonitoredServiceMother.clone(service, { status: MonitoredServiceStatusMother.toggle(service.status) });
+    }
+
+    static applyUpdates(service: MonitoredService, updates: MonitoredServiceUpdatableProps): MonitoredService {
+        return MonitoredServiceMother.clone(service, updates);
     }
 }

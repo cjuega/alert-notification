@@ -7,27 +7,40 @@ import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
 import MonitoredServiceCreatedDomainEvent from '@src/monitoredServices/domain/monitoredServiceCreatedDomainEvent';
 import { MonitoredServicePrimitives } from '@src/monitoredServices/domain/monitoredServicePrimitives';
 import MonitoredServiceStatusChangedDomainEvent from '@src/monitoredServices/domain/monitoredServiceStatusChangedDomainEvent';
+import MonitoredServiceUpdatedDomainEvent from '@src/monitoredServices/domain/monitoredServiceUpdatedDomainEvent';
 
+export type MonitoredServiceUpdatableProps = {
+    name?: MonitoredServiceName;
+    escalationPolicy?: EscalationPolicy;
+};
 export default class MonitoredService extends AggregateRoot {
     readonly id: MonitoredServiceId;
 
-    readonly name: MonitoredServiceName;
+    private _name: MonitoredServiceName;
 
     private _status: MonitoredServiceStatus;
 
-    readonly escalationPolicy: EscalationPolicy;
+    private _escalationPolicy: EscalationPolicy;
+
+    get name(): MonitoredServiceName {
+        return MonitoredServiceName.clone(this._name);
+    }
 
     get status(): MonitoredServiceStatus {
         return this._status;
+    }
+
+    get escalationPolicy(): EscalationPolicy {
+        return EscalationPolicy.clone(this._escalationPolicy);
     }
 
     constructor(id: string, name: string, status: MonitoredServiceStatus, escalationPolicy: EscalationPolicy) {
         super();
 
         this.id = new MonitoredServiceId(id);
-        this.name = new MonitoredServiceName(name);
+        this._name = new MonitoredServiceName(name);
         this._status = status;
-        this.escalationPolicy = escalationPolicy;
+        this._escalationPolicy = escalationPolicy;
     }
 
     static create(id: string, name: string, escalationPolicy: EscalationPolicy): MonitoredService {
@@ -44,12 +57,24 @@ export default class MonitoredService extends AggregateRoot {
         this.record(new MonitoredServiceStatusChangedDomainEvent(this.toPrimitives()));
     }
 
+    update({ name, escalationPolicy }: MonitoredServiceUpdatableProps): void {
+        if (name) {
+            this._name = name;
+        }
+
+        if (escalationPolicy) {
+            this._escalationPolicy = escalationPolicy;
+        }
+
+        this.record(new MonitoredServiceUpdatedDomainEvent(this.toPrimitives()));
+    }
+
     toPrimitives(): MonitoredServicePrimitives {
         return {
             id: this.id.value,
-            name: this.name.value,
+            name: this._name.value,
             status: this.status,
-            escalationPolicy: this.escalationPolicy.toPrimitives()
+            escalationPolicy: this._escalationPolicy.toPrimitives()
         };
     }
 }
