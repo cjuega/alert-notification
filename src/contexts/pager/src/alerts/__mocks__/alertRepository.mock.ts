@@ -2,7 +2,7 @@ import { Nullable } from '@ans/ctx-shared/domain/nullable';
 import { AlertRepository } from '@src/alerts/domain/alertRepository';
 import Alert from '@src/alerts/domain/alert';
 import AlertId from '@src/alerts/domain/alertId';
-import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
+import AlertStatus from '@src/alerts/domain/alertStatus';
 
 export default class AlertRepositoryMock implements AlertRepository {
     private mockSave = jest.fn();
@@ -10,6 +10,8 @@ export default class AlertRepositoryMock implements AlertRepository {
     private mockSearch = jest.fn();
 
     private mockSearchPendingByService = jest.fn();
+
+    private mockSearchAll = jest.fn();
 
     async save(alert: Alert): Promise<void> {
         this.mockSave(alert);
@@ -41,7 +43,7 @@ export default class AlertRepositoryMock implements AlertRepository {
         expect(this.mockSearch).toHaveBeenLastCalledWith(id);
     }
 
-    async searchPendingByService(serviceId: MonitoredServiceId): Promise<Nullable<Alert>> {
+    async searchPendingByService(serviceId: AlertId): Promise<Nullable<Alert>> {
         return this.mockSearchPendingByService(serviceId);
     }
 
@@ -51,5 +53,17 @@ export default class AlertRepositoryMock implements AlertRepository {
 
     assertSearchPendingByServiceHasBeenCalledWith(id: AlertId): void {
         expect(this.mockSearchPendingByService).toHaveBeenLastCalledWith(id);
+    }
+
+    async searchAll(status?: AlertStatus): Promise<Alert[]> {
+        return this.mockSearchAll(status);
+    }
+
+    whenSearchAllThenReturn(services: Alert[]): void {
+        this.mockSearchAll.mockReturnValue(services);
+    }
+
+    assertSearchAllHasBeenCalledWith(status?: AlertStatus): void {
+        expect(this.mockSearchAll).toHaveBeenLastCalledWith(status);
     }
 }

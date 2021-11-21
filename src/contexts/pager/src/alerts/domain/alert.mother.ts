@@ -5,17 +5,16 @@ import AlertMessage from '@src/alerts/domain/alertMessage';
 import AlertIdMother from '@src/alerts/domain/alertId.mother';
 import AlertMessageMother from '@src/alerts/domain/alertMessage.mother';
 import AlertStatusMother from '@src/alerts/domain/alertStatus.mother';
-import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
-import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import Datetime from '@ans/ctx-shared/domain/datetime';
 import DatetimeMother from '@ans/ctx-shared/domain/datetime.mother';
 import { Nullable } from '@ans/ctx-shared/domain/nullable';
 import MotherCreator from '@ans/ctx-shared/domain/motherCreator.mother';
+import Repeater from '@ans/ctx-shared/domain/repeater.mother';
 
 export default class AlertMother {
     static create(
         id: AlertId,
-        serviceId: MonitoredServiceId,
+        serviceId: AlertId,
         message: AlertMessage,
         status: AlertStatus,
         createdAt: Datetime,
@@ -26,7 +25,7 @@ export default class AlertMother {
 
     static random(overwrites?: { status?: AlertStatus; resolvedAt?: Nullable<Datetime> }): Alert {
         const id = AlertIdMother.random(),
-            serviceId = MonitoredServiceIdMother.random(),
+            serviceId = AlertIdMother.random(),
             message = AlertMessageMother.random(),
             status = overwrites?.status ? overwrites.status : AlertStatusMother.random(),
             createdAt = DatetimeMother.random(),
@@ -34,6 +33,10 @@ export default class AlertMother {
             resolvedAt = overwrites?.resolvedAt !== undefined ? overwrites.resolvedAt : randomResolvedAt;
 
         return AlertMother.create(id, serviceId, message, status, createdAt, resolvedAt);
+    }
+
+    static randomList(nItems?: number, overwrites?: { status?: AlertStatus }): Alert[] {
+        return Repeater.random(() => AlertMother.random(overwrites), nItems);
     }
 
     static pendingAlert(): Alert {

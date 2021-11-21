@@ -9,9 +9,9 @@ export default class SearchAllMonitoredServicesResponse implements Response {
 
     constructor(services: MonitoredService[]) {
         this.items = services.map((service) => {
-            const { id, name, status } = service.toPrimitives();
+            const { escalationPolicy, ...others } = service.toPrimitives();
 
-            return { id, name, status };
+            return { ...others };
         });
     }
 }
