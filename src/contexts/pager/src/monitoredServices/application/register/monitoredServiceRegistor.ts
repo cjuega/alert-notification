@@ -2,7 +2,7 @@ import { EventBus } from '@ans/ctx-shared/domain/bus/event/eventBus';
 import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';
 import MonitoredService from '@src/monitoredServices/domain/monitoredService';
 import MonitoredServiceAlreadyExists from '@src/monitoredServices/domain/monitoredServiceAlreadyExists';
-import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import { MonitoredServiceRepository } from '@src/monitoredServices/domain/monitoredServiceRepository';
 
 export default class MonitoredServiceRegistor {

@@ -1,5 +1,5 @@
 import MonitoredService, { MonitoredServiceUpdatableProps } from '@src/monitoredServices/domain/monitoredService';
-import MonitoredServiceIdMother from '@src/monitoredServices/domain/monitoredServiceId.mother';
+import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import MonitoredServiceNameMother from '@src/monitoredServices/domain/monitoredServiceName.mother';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 import MonitoredServiceStatusMother from '@src/monitoredServices/domain/monitoredServiceStatus.mother';

@@ -1,6 +1,6 @@
 import MonitoredServiceRepositoryMock from '@src/monitoredServices/__mocks__/monitoredServiceRepository.mock';
 import MonitoredServiceFinder from '@src/monitoredServices/application/find/monitoredServiceFinder';
-import MonitoredServiceIdMother from '@src/monitoredServices/domain/monitoredServiceId.mother';
+import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import MonitoredServiceNotFound from '@src/monitoredServices/domain/monitoredServiceNotFound';
 import MonitoredServiceMother from '@src/monitoredServices/domain/monitoredService.mother';
 import FindMonitoredServiceResponseMother from '@src/monitoredServices/application/find/findMonitoredServiceResponse.mother';

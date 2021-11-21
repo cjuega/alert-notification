@@ -1,6 +1,6 @@
 import { EventBus } from '@ans/ctx-shared/domain/bus/event/eventBus';
 import MonitoredServiceFinder from '@src/monitoredServices/domain/monitoredServiceFinder';
-import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import { MonitoredServiceRepository } from '@src/monitoredServices/domain/monitoredServiceRepository';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 

@@ -1,7 +1,7 @@
 import { EventBus } from '@ans/ctx-shared/domain/bus/event/eventBus';
 import { MonitoredServiceUpdatableProps } from '@src/monitoredServices/domain/monitoredService';
 import MonitoredServiceFinder from '@src/monitoredServices/domain/monitoredServiceFinder';
-import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import { MonitoredServiceRepository } from '@src/monitoredServices/domain/monitoredServiceRepository';
 
 export default class MonitoredServiceUpdater {

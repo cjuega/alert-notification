@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import AggregateRoot from '@ans/ctx-shared/domain/aggregateRoot';
-import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import MonitoredServiceName from '@src/monitoredServices/domain/monitoredServiceName';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 import EscalationPolicy from '@src/monitoredServices/domain/escalationPolicy';

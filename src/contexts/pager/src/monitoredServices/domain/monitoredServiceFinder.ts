@@ -1,5 +1,5 @@
 import MonitoredService from '@src/monitoredServices/domain/monitoredService';
-import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import MonitoredServiceNotFound from '@src/monitoredServices/domain/monitoredServiceNotFound';
 import { MonitoredServiceRepository } from '@src/monitoredServices/domain/monitoredServiceRepository';
 

@@ -1,5 +1,5 @@
 import UuidMother from '@ans/ctx-shared/domain/uuid.mother';
-import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 
 export default class MonitoredServiceIdMother {
     static create(id: string): MonitoredServiceId {

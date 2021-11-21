@@ -1,6 +1,6 @@
 import { Nullable } from '@ans/ctx-shared/domain/nullable';
 import MonitoredService from '@src/monitoredServices/domain/monitoredService';
-import MonitoredServiceId from '@src/monitoredServices/domain/monitoredServiceId';
+import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import MonitoredServiceStatus from '@src/monitoredServices/domain/monitoredServiceStatus';
 
 export interface MonitoredServiceRepository {

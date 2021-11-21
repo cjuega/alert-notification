@@ -1,4 +1,4 @@
-import MonitoredServiceIdMother from '@src/monitoredServices/domain/monitoredServiceId.mother';
+import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import FindMonitoredServiceQuery, { QueryParams } from '@src/monitoredServices/application/find/findMonitoredServiceQuery';
 
 export default class FindMonitoredServiceQueryMother {

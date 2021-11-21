@@ -1,6 +1,6 @@
 import EventBusMock from '@ans/ctx-shared/__mocks__/eventBus.mock';
 import MonitoredServiceRepositoryMock from '@src/monitoredServices/__mocks__/monitoredServiceRepository.mock';
-import MonitoredServiceIdMother from '@src/monitoredServices/domain/monitoredServiceId.mother';
+import MonitoredServiceIdMother from '@src/shared/domain/monitoredServiceId.mother';
 import MonitoredServiceNotFound from '@src/monitoredServices/domain/monitoredServiceNotFound';
 import MonitoredServiceStatusMother from '@src/monitoredServices/domain/monitoredServiceStatus.mother';
 import MonitoredServiceStatusUpdater from '@src/monitoredServices/application/updateStatus/monitoredServiceStatusUpdater';
