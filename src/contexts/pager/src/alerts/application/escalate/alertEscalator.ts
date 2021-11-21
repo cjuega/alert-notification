@@ -19,7 +19,7 @@ export default class AlertEscalator {
     async run(id: AlertId): Promise<void> {
         const alert = await this.finder.find(id);
 
-        if (!alert.isResolved() && !alert.isMaxEscalationLevelReached()) {
+        if (!alert.isAcknowledged() && !alert.isMaxEscalationLevelReached()) {
             alert.escalate();
 
             await this.repository.save(alert);

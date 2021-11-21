@@ -30,13 +30,13 @@ describe('alertEscalator', () => {
         }
     });
 
-    it('should do nothing when the Alert was already resolved', async () => {
+    it('should do nothing when the Alert was already acknowledged', async () => {
         expect.hasAssertions();
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
             handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
-            alert = AlertMother.resolvedAlert(),
+            alert = AlertMother.notPendingAlert(),
             command = EscalateAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
@@ -46,13 +46,13 @@ describe('alertEscalator', () => {
         repository.assertNothingSaved();
     });
 
-    it('should publish nothing when the Alert was already resolved', async () => {
+    it('should publish nothing when the Alert was already acknowledged', async () => {
         expect.hasAssertions();
 
         const repository = new AlertRepositoryMock(),
             eventBus = new EventBusMock(),
             handler = new EscalateAlertCommandHandler(new AlertEscalator(repository, eventBus)),
-            alert = AlertMother.resolvedAlert(),
+            alert = AlertMother.notPendingAlert(),
             command = EscalateAlertCommandMother.create({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
