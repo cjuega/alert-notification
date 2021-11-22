@@ -9,8 +9,6 @@ export default class AlertRepositoryMock implements AlertRepository {
 
     private mockSearch = jest.fn();
 
-    private mockSearchPendingByService = jest.fn();
-
     private mockSearchAll = jest.fn();
 
     async save(alert: Alert): Promise<void> {
@@ -41,18 +39,6 @@ export default class AlertRepositoryMock implements AlertRepository {
 
     assertSearchHasBeenCalledWith(id: AlertId): void {
         expect(this.mockSearch).toHaveBeenLastCalledWith(id);
-    }
-
-    async searchPendingByService(serviceId: AlertId): Promise<Nullable<Alert>> {
-        return this.mockSearchPendingByService(serviceId);
-    }
-
-    whenSearchPendingByServiceThenReturn(alert: Nullable<Alert>): void {
-        this.mockSearchPendingByService.mockReturnValue(alert);
-    }
-
-    assertSearchPendingByServiceHasBeenCalledWith(id: AlertId): void {
-        expect(this.mockSearchPendingByService).toHaveBeenLastCalledWith(id);
     }
 
     async searchAll(status?: AlertStatus): Promise<Alert[]> {

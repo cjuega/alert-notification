@@ -6,7 +6,6 @@ import AlertAlreadyExists from '@src/alerts/domain/alertAlreadyExists';
 import AlertId from '@src/alerts/domain/alertId';
 import AlertMessage from '@src/alerts/domain/alertMessage';
 import { AlertRepository } from '@src/alerts/domain/alertRepository';
-import AnotherAlertPending from '@src/alerts/domain/anotherAlertPending';
 import MonitoredServiceId from '@src/shared/domain/monitoredServiceId';
 import FindMonitoredServiceQuery from '@src/monitoredServices/application/find/findMonitoredServiceQuery';
 import AlertEscalationPolicy from '@src/alerts/domain/alertEscalationPolicy';
@@ -30,7 +29,6 @@ export default class AlertCreator {
 
     async run(id: AlertId, serviceId: MonitoredServiceId, message: AlertMessage): Promise<void> {
         await this.ensureAlertDoesntExist(id);
-        await this.ensureThereIsntAPendingAlertFor(serviceId);
 
         const escalationPolicy = await this.queryEscalationPolicy(serviceId),
             alert = Alert.create(id, serviceId, message, escalationPolicy, this.clock.now());
@@ -44,14 +42,6 @@ export default class AlertCreator {
 
         if (alert) {
             throw new AlertAlreadyExists(id.value);
-        }
-    }
-
-    private async ensureThereIsntAPendingAlertFor(serviceId: MonitoredServiceId): Promise<void> {
-        const alert = await this.repository.searchPendingByService(serviceId);
-
-        if (alert) {
-            throw new AnotherAlertPending(alert.id.value, serviceId.value);
         }
     }
 

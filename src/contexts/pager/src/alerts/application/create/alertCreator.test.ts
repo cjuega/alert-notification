@@ -6,7 +6,6 @@ import AlertCreator from '@src/alerts/application/create/alertCreator';
 import AlertMother from '@src/alerts/domain/alert.mother';
 import AlertAlreadyExists from '@src/alerts/domain/alertAlreadyExists';
 import AlertCreatedDomainEventMother from '@src/alerts/domain/alertCreatedDomainEvent.mother';
-import AnotherAlertPending from '@src/alerts/domain/anotherAlertPending';
 import FindMonitoredServiceResponseMother from '@src/monitoredServices/application/find/findMonitoredServiceResponse.mother';
 import MonitoredServiceNotFound from '@src/monitoredServices/domain/monitoredServiceNotFound';
 import AlertEscalationPolicyMother from '@src/alerts/domain/alertEscalationPolicy.mother';
@@ -27,7 +26,6 @@ describe('alertCreator', () => {
             command = CreateAlertCommandMother.random({ id: alert.id.value });
 
         repository.whenSearchThenReturn(alert);
-        repository.whenSearchPendingByServiceThenReturn(null);
 
         let error;
 
@@ -37,31 +35,6 @@ describe('alertCreator', () => {
             error = e;
         } finally {
             expect(error).toBeInstanceOf(AlertAlreadyExists);
-        }
-    });
-
-    it('should throw an AnotherAlertPending when creating an Alert which MonitoredService has a pending alert', async () => {
-        expect.hasAssertions();
-
-        const queryBus = new QueryBusMock(),
-            repository = new AlertRepositoryMock(),
-            clock = new ClockMock(),
-            eventBus = new EventBusMock(),
-            handler = new CreateAlertCommandHandler(new AlertCreator(queryBus, repository, clock, eventBus)),
-            alert = AlertMother.random(),
-            command = CreateAlertCommandMother.random({ serviceId: alert.serviceId.value });
-
-        repository.whenSearchThenReturn(null);
-        repository.whenSearchPendingByServiceThenReturn(alert);
-
-        let error;
-
-        try {
-            await handler.handle(command);
-        } catch (e) {
-            error = e;
-        } finally {
-            expect(error).toBeInstanceOf(AnotherAlertPending);
         }
     });
 
@@ -76,7 +49,6 @@ describe('alertCreator', () => {
             command = CreateAlertCommandMother.random();
 
         repository.whenSearchThenReturn(null);
-        repository.whenSearchPendingByServiceThenReturn(null);
         queryBus.whenAskThenThrow(new MonitoredServiceNotFound(command.serviceId));
 
         let error;
@@ -104,7 +76,6 @@ describe('alertCreator', () => {
             expected = CreateAlertCommandMother.applyCommand(command, { escalationPolicy });
 
         repository.whenSearchThenReturn(null);
-        repository.whenSearchPendingByServiceThenReturn(null);
         queryBus.whenAskThenReturn(findMonitoredServiceResponse);
         clock.whenNowThenReturn(expected.createdAt);
 
@@ -128,7 +99,6 @@ describe('alertCreator', () => {
             expected = [AlertCreatedDomainEventMother.fromAlert(alert), AlertEscalatedDomainEventMother.fromAlert(alert)];
 
         repository.whenSearchThenReturn(null);
-        repository.whenSearchPendingByServiceThenReturn(null);
         queryBus.whenAskThenReturn(findMonitoredServiceResponse);
         clock.whenNowThenReturn(alert.createdAt);
 
